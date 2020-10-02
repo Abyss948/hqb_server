@@ -17,10 +17,10 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/getUsernameByUserid")
-    public JsonResult<Object> getUsernameByUserid(@RequestParam("userid") int userid){
-        Map<String,Object> map = new HashMap<>();
-        map.put("username",userService.getUsernameByUserid(userid));
-        //测试
-        return new JsonResult<>(map,"查询成功");
+    public JsonResult<Object> getUsernameByUserid(@RequestParam("userid") int userid) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", userService.getUsernameByUserid(userid));
+        //测试2
+        return new JsonResult<>(map, "查询成功");
     }
 }
