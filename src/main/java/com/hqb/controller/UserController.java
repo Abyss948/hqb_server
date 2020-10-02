@@ -20,7 +20,7 @@ public class UserController {
     public JsonResult<Object> getUsernameByUserid(@RequestParam("userid") int userid) {
         Map<String, Object> map = new HashMap<>();
         map.put("username", userService.getUsernameByUserid(userid));
-        //测试4
+        //测试5
         return new JsonResult<>(map, "查询成功");
     }
 }
