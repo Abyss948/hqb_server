@@ -14,4 +14,19 @@ public class AdminServicelmpl implements AdminService{
     public Admin getAdminByAdminName(String adminname) {
         return adminMapper.getAdminByAdminName(adminname);
     }
+
+    @Override
+    public int getMinRate() {
+        return adminMapper.getMinRate();
+    }
+
+    @Override
+    public int getMaxRate() {
+        return adminMapper.getMaxRate();
+    }
+
+    @Override
+    public void updateRateRapid(int rateMin, int rateMax) {
+        adminMapper.updateRateRapid(rateMin,rateMax);
+    }
 }
