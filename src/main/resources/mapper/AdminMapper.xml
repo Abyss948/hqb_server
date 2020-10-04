@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqb.mapper.AdminMapper">
+
+    <select id="getAdminByAdminName" resultType="Admin" parameterType="string">
+        select * from admin where adminname=#{adminname}
+    </select>
+
+
+    <select id="getMinRate" resultType="int">
+        select ratemin from admin where adminid=1
+    </select>
+
+    <select id="getMaxRate" resultType="int">
+        select rateMax from admin where adminid=1
+    </select>
+
+    <update id="updateRateRapid" parameterType="int">
+        update admin set ratemin=#{rateMin},ratemax=#{rateMax} where adminid=1
+    </update>
+</mapper>

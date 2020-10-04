@@ -1,6 +1,8 @@
 package com.hqb.config;
 
+import com.hqb.pojo.Admin;
 import com.hqb.pojo.User;
+import com.hqb.service.AdminService;
 import com.hqb.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -13,10 +15,12 @@ public class UserRealm extends AuthorizingRealm {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AdminService adminService;
+
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-
 
         return null;
     }
@@ -27,11 +31,15 @@ public class UserRealm extends AuthorizingRealm {
 
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         User user = userService.getUserByUserName(token.getUsername());
+        Admin admin = adminService.getAdminByAdminName(token.getUsername());
 
-        if (user==null){
+        if (user == null && admin == null) {
             return null;
         }
 
-        return new SimpleAuthenticationInfo(user,user.getPassword(),"");
+        if (admin != null)
+            return new SimpleAuthenticationInfo(admin, admin.getPassword(), "");
+        else
+            return new SimpleAuthenticationInfo(user, user.getPassword(), "");
     }
 }
