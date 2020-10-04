@@ -9,9 +9,10 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class AdminController {
@@ -34,5 +35,19 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/getRateMinMax")
+    public JsonResult<Object> getRateMinMax(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("rateMin",adminService.getMinRate()/100.0+"%");
+        map.put("rateMax",adminService.getMaxRate()/100.0+"%");
+        return new JsonResult<>(map, "查询成功");
+    }
 
+    @PutMapping("/updateRateRapid")
+    public JsonResult<Object> updateRate(@RequestParam("rateMin") double rateMin,@RequestParam("rateMax") double rateMax){
+        int rateMin1 = (int)(rateMin*100);
+        int rateMax1 = (int)(rateMax*100);
+        adminService.updateRateRapid(rateMin1,rateMax1);
+        return new JsonResult<>();
+    }
 }

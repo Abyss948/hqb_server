@@ -8,4 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminMapper {
     Admin getAdminByAdminName(String adminname);
+
+    int getMinRate();
+    int getMaxRate();
+
+    void updateRateRapid(int rateMin, int rateMax);
 }
