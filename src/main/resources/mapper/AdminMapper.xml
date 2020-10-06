@@ -20,4 +20,8 @@
     <update id="updateRateRapid" parameterType="int">
         update admin set ratemin=#{rateMin},ratemax=#{rateMax} where adminid=1
     </update>
+
+    <select id="getSuccessRecord" resultType="java.util.HashMap">
+        select successid,nid,pid,rate,timelimit,starttime,endtime,money,servicefee,status from success order by starttime
+    </select>
 </mapper>

@@ -22,5 +22,6 @@ public class Success {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp endtime;
     private double money;
+    private double servicefee;
     private int status;
 }

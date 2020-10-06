@@ -50,4 +50,11 @@ public class AdminController {
         adminService.updateRateRapid(rateMin1,rateMax1);
         return new JsonResult<>();
     }
+
+    @GetMapping("/getSuccessRecord")
+    public JsonResult<Object> getSuccessRecord(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("successRecord",adminService.getSuccessRecord());
+        return new JsonResult<>(map);
+    }
 }

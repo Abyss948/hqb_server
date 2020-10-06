@@ -2,6 +2,9 @@ package com.hqb.service;
 
 import com.hqb.pojo.Admin;
 
+import java.util.List;
+import java.util.Map;
+
 public interface AdminService {
     Admin getAdminByAdminName(String adminname);
 
@@ -9,4 +12,5 @@ public interface AdminService {
     int getMaxRate();
 
     void updateRateRapid(int rateMin, int rateMax);
+    List<Map<String,Object>> getSuccessRecord();
 }
