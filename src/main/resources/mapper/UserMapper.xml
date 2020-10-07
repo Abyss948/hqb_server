@@ -13,7 +13,7 @@
     </select>
 
     <insert id="addUser" parameterType="map" useGeneratedKeys="true" keyColumn="userid">
-        insert into user (username,password,email,wechat,userimgpath,intro,question,answer,balance,status) values (#{username},#{password},#{email},#{wechat},#{userimgpath},#{intro},#{question},#{answer},#{balance},#{status})
+        insert into user (username,password,email,wechat,intro,question,answer,balance,status) values (#{username},#{password},#{email},#{wechat},#{intro},#{question},#{answer},#{balance},#{status})
     </insert>
 
 </mapper>
