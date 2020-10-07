@@ -11,5 +11,5 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface RateMapper {
-    Map<Timestamp,Integer> getRate();
+    List<Map<Timestamp,Integer>> getRate();
 }

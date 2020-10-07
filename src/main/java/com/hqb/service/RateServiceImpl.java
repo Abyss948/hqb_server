@@ -16,7 +16,7 @@ public class RateServiceImpl implements RateService {
     RateMapper rateMapper;
 
     @Override
-    public  Map<Timestamp,Integer> getRate()
+    public  List<Map<Timestamp,Integer>> getRate()
     {
 
         return rateMapper.getRate();

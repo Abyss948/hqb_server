@@ -21,10 +21,10 @@ public class RateController {
     RateService rateService;
 
     @GetMapping("/getRate")
-    public JsonResult<Map<String,Map<Timestamp,Integer>>> getRate()
+    public JsonResult<Object> getRate()
     {
 
-        Map<String, Map<Timestamp,Integer>> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
         map.put("ratelist", rateService.getRate());
         return new JsonResult<>(map,"success");
     }

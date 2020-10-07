@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface RateService {
 
-    Map<Timestamp,Integer> getRate();
+    List<Map<Timestamp,Integer>> getRate();
 }
