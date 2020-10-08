@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqb.mapper.ProvideMapper">
+
+    <insert id="setNewProvide" parameterType="map" useGeneratedKeys="true" keyColumn="needid">
+        insert into provide(userid,rate,timelimit,goalmoney,nowmoney,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,0)
+    </insert>
+
+    <update id="updateOldProvide" parameterType="int">
+        update provide set status=1 where userid=#{userid}
+    </update>
+
+</mapper>

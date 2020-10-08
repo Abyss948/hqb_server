@@ -19,5 +19,6 @@ public class User {
     private String answer;
     private double balance;
     private int status;
+    private int credit;
 
 }
