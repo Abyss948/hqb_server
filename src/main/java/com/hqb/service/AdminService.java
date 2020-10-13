@@ -13,4 +13,6 @@ public interface AdminService {
 
     void updateRateRapid(int rateMin, int rateMax);
     List<Map<String,Object>> getSuccessRecord();
+
+    double getServiceRate();
 }
