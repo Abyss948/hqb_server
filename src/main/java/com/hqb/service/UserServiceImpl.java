@@ -27,17 +27,13 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public void addUser(String username, String password, String email, String wechat, String intro, String question, String answer, double balance, int status) {
+    public void addUser(String username, String idnumber, String bankcard, String phone, String password) {
         Map<String,Object> map = new HashMap<>();
         map.put("username",username);
+        map.put("idnumber",idnumber);
+        map.put("bankcard",bankcard);
+        map.put("phone",phone);
         map.put("password",password);
-        map.put("email",email);
-        map.put("wechat",wechat);
-        map.put("intro",intro);
-        map.put("question",question);
-        map.put("answer",answer);
-        map.put("balance",balance);
-        map.put("status",status);
         userMapper.addUser(map);
     }
 }

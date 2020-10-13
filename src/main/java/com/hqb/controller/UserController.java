@@ -31,12 +31,12 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public JsonResult<Object> register(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("email") String email, @RequestParam("wechat") String wechat, @RequestParam("intro") String intro, @RequestParam("question") String question, @RequestParam("answer") String answer,@RequestParam("balance") double balance,@RequestParam("status") int status){
+    public JsonResult<Object> register(@RequestParam("username") String username, @RequestParam("idnumber") String idnumber, @RequestParam("bankcard") String bankcard, @RequestParam("phone") String phone, @RequestParam("password") String password){
         User user = userService.getUserByUserName(username);
         if (user!=null){
             return new JsonResult<>("1","用户名重复");
         }
-        userService.addUser(username,password,email,wechat,intro,question,answer,balance,status);
+        userService.addUser(username,idnumber,bankcard,phone,password);
         return new JsonResult<>("0","注册成功");
     }
 
@@ -47,7 +47,7 @@ public class UserController {
         try {
             subject.login(usernamePasswordToken);
             User user = userService.getUserByUserName(username);
-            return new JsonResult<>(user.getInfo(),"登陆成功");
+            return new JsonResult<>("登陆成功");
         }catch (UnknownAccountException e){
             return new JsonResult<>("1","用户名不存在");
         }catch (IncorrectCredentialsException e){

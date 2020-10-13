@@ -5,6 +5,6 @@ public interface UserService {
 
     User getUserByUserName(String username);
     String getUsernameByUserid(int userid);
-    void addUser(String username, String password, String email, String wechat, String intro, String question, String answer, double balance, int status);
+    void addUser(String username, String idnumber, String bankcard, String phone, String password);
 
 }
