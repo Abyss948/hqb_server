@@ -1,8 +1,10 @@
 package com.hqb.service;
 
+import com.hqb.mapper.AdminMapper;
 import com.hqb.mapper.NeedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,9 @@ import java.util.Map;
 public class NeedServicelmpl implements NeedService {
     @Autowired
     NeedMapper needMapper;
+
+    @Autowired
+    AdminMapper adminMapper;
 
     @Override
     public void setNewNeed(int userid, double rate, double timelimit, double goalmoney) {
@@ -22,6 +27,14 @@ public class NeedServicelmpl implements NeedService {
         map.put("goalmoney",goalmoney);
         needMapper.updateOldNeed(userid);
         needMapper.setNewNeed(map);
+
+    }
+
+    @Override
+    public boolean isOverRate(double rate) {
+        double rateMin = adminMapper.getMinRate()/100.0;
+        double rateMax = adminMapper.getMaxRate()/100.0;
+        return !(rate >= rateMin) || !(rate <= rateMax);
 
     }
 }

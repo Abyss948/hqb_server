@@ -37,4 +37,9 @@ public class AdminServicelmpl implements AdminService {
     public List<Map<String, Object>> getSuccessRecord() {
         return adminMapper.getSuccessRecord();
     }
+
+    @Override
+    public double getServiceRate() {
+        return 0.01;
+    }
 }
