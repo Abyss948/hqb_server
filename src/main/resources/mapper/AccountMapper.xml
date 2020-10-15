@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqb.mapper.AccountMapper">
+
+    <select id="getBalanceByUserid" resultType="Double" parameterType="int">
+        select balance from user where userid=#{userid}
+    </select>
+    <select id="getIncomeByUserid" resultType="Double" parameterType="int">
+        select sum(TIMESTAMPDIFF(year,now(),starttime)*rate*money/10000) from success where provideid=#{userid}
+    </select>
+    <select id="getDeptByUserid" resultType="Double" parameterType="int">
+        select sum(TIMESTAMPDIFF(year,now(),starttime)*rate*money/10000+money) from success where needid=#{userid}
+    </select>
+    <select id="getOrderByUserid" resultType="java.util.HashMap" parameterType="int">
+        select starttime,username,bankcard, money,rate,money*rate*TIMESTAMPDIFF(year,now(),starttime),needid,provideid
+        from success join user on user.userid=success.provideid or user.userid=success.needid
+        where userid=#{userid}
+        order by starttime
+    </select>
+
+    <select id="getTradepartnerByUserid" resultType="java.util.HashMap" parameterType="int">
+        select username, tcontract from user where userid=#{userid}
+    </select>
+
+
+
+
+
+
+
+</mapper>

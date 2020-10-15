@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqb.mapper.MyMapper">
+
+
+    <select id="getMyByUserid" resultType="java.util.HashMap" parameterType="int">
+  select username, bankcard, tcontract,balance,sum(money*rate*TIMESTAMPDIFF(year,NOW(),starttime)+money)
+  from user left join success on userid=needid
+  where userid=#{userid}
+    </select>
+
+
+
+
+
+
+
+
+
+</mapper>

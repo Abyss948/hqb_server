@@ -1,13 +1,15 @@
 package com.hqb.mapper;
-
-import com.hqb.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 @Repository
-public interface BalanceMapper {
+public interface MyMapper {
 
-    Double getBalanceByUserid(int userid);
+
+    Map<String, Object> getMyByUserid(int userid);
 
 }
