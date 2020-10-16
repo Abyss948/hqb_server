@@ -2,11 +2,11 @@ package com.hqb.service;
 
 import com.hqb.mapper.AdminMapper;
 import com.hqb.mapper.NeedMapper;
-import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -31,9 +31,16 @@ public class NeedServicelmpl implements NeedService {
     }
 
     @Override
-    public boolean isOverRate(double rate) {
-        double rateMin = adminMapper.getMinRate() / 100.0;
-        double rateMax = adminMapper.getMaxRate() / 100.0;
+    public boolean isOverRate(double rate, double timelimit) {
+        double rateMin;
+        double rateMax;
+        if (timelimit <= 1) {
+            rateMin = adminMapper.getMinRateOne() / 100.0;
+            rateMax = adminMapper.getMaxRateOne() / 100.0;
+        }else{
+            rateMin = adminMapper.getMinRateTwo() / 100.0;
+            rateMax = adminMapper.getMaxRateTwo() / 100.0;
+        }
         return !(rate >= rateMin) || !(rate <= rateMax);
 
     }
@@ -64,6 +71,11 @@ public class NeedServicelmpl implements NeedService {
         } else if (timelimit <= 3) {
             timeRate = 3;
         }
-        return goalmoney*serviceRate*timeRate;
+        return goalmoney * serviceRate * timeRate;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMatchList(int userid, double rate, double timelimit, double goalmoney) {
+        return null;
     }
 }

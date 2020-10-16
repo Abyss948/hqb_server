@@ -38,8 +38,10 @@ public class AdminController {
     @GetMapping("/getRateMinMax")
     public JsonResult<Object> getRateMinMax(){
         Map<String, Object> map = new HashMap<>();
-        map.put("rateMin",adminService.getMinRate()/100.0+"%");
-        map.put("rateMax",adminService.getMaxRate()/100.0+"%");
+        map.put("rateMinOne",adminService.getMinRateOne()/100.0+"%");
+        map.put("rateMaxOne",adminService.getMaxRateOne()/100.0+"%");
+        map.put("rateMinTwo",adminService.getMinRateTwo()/100.0+"%");
+        map.put("rateMaxTwo",adminService.getMaxRateTwo()/100.0+"%");
         return new JsonResult<>(map, "查询成功");
     }
 
@@ -47,7 +49,7 @@ public class AdminController {
     public JsonResult<Object> updateRate(@RequestParam("rateMin") double rateMin,@RequestParam("rateMax") double rateMax){
         int rateMin1 = (int)(rateMin*100);
         int rateMax1 = (int)(rateMax*100);
-        adminService.updateRateRapid(rateMin1,rateMax1);
+        adminService.updateRateOneRapid(rateMin1,rateMax1);
         return new JsonResult<>();
     }
 
