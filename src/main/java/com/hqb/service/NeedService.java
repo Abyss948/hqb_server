@@ -4,4 +4,6 @@ public interface NeedService {
     void setNewNeed(int userid, double rate, double timelimit, double goalmoney);
 
     boolean isOverRate(double rate);
+
+    double getServicefee(double goalmoney,double timelimit);
 }

@@ -31,13 +31,16 @@ public class ProvideController {
             map1.put("rateMin",adminService.getMinRate()/100.0);
             return new JsonResult<>(map1,"1","汇率超出范围");
         }
+        if(timelimit<0||timelimit>3)
+            return new JsonResult<>("2","时间超出范围");
+        if(goalmoney<=0)
+            return new JsonResult<>("3","金额超出范围");
         Map<String, Object> map = new HashMap<>();
         map.put("goalmoney",goalmoney);
         map.put("rate",rate);
         double interest = goalmoney*rate/100*timelimit;
         map.put("interest",interest);
-        double servicerate = adminService.getServiceRate();
-        double servicefee = servicerate*goalmoney;
+        double servicefee = provideService.getServicefee(goalmoney,timelimit);
         map.put("servicefee",servicefee);
         return new JsonResult<>(map);
     }
