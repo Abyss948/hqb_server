@@ -19,10 +19,9 @@ public class NeedServicelmpl implements NeedService {
 
     @Override
     public void setNewNeed(int userid, double rate, double timelimit, double goalmoney) {
-        int rateint = (int) (rate * 100);
         Map<String, Object> map = new HashMap<>();
         map.put("userid", userid);
-        map.put("rate", rateint);
+        map.put("rate", rate);
         map.put("timelimit", timelimit);
         map.put("goalmoney", goalmoney);
         needMapper.updateOldNeed(userid);
@@ -35,11 +34,11 @@ public class NeedServicelmpl implements NeedService {
         double rateMin;
         double rateMax;
         if (timelimit <= 1) {
-            rateMin = adminMapper.getMinRateOne() / 100.0;
-            rateMax = adminMapper.getMaxRateOne() / 100.0;
+            rateMin = adminMapper.getMinRateOne();
+            rateMax = adminMapper.getMaxRateOne();
         }else{
-            rateMin = adminMapper.getMinRateTwo() / 100.0;
-            rateMax = adminMapper.getMaxRateTwo() / 100.0;
+            rateMin = adminMapper.getMinRateTwo();
+            rateMax = adminMapper.getMaxRateTwo();
         }
         return !(rate >= rateMin) || !(rate <= rateMax);
 
@@ -76,6 +75,12 @@ public class NeedServicelmpl implements NeedService {
 
     @Override
     public List<Map<String, Object>> getMatchList(int userid, double rate, double timelimit, double goalmoney) {
-        return null;
+        Map<String,Object> map = new HashMap<>();
+        map.put("userid",userid);
+        map.put("timelimit",timelimit);
+        map.put("rate",rate);
+        List<Map<String, Object>> list1 = needMapper.getTimeRateMatchList(map);
+        /*List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);*/
+        return list1;
     }
 }

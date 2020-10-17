@@ -19,27 +19,27 @@ public class AdminServicelmpl implements AdminService {
     }
 
     @Override
-    public int getMinRateOne() {
+    public double getMinRateOne() {
         return adminMapper.getMinRateOne();
     }
 
     @Override
-    public int getMaxRateOne() {
+    public double getMaxRateOne() {
         return adminMapper.getMaxRateOne();
     }
 
     @Override
-    public int getMinRateTwo() {
+    public double getMinRateTwo() {
         return adminMapper.getMinRateTwo();
     }
 
     @Override
-    public int getMaxRateTwo() {
+    public double getMaxRateTwo() {
         return adminMapper.getMaxRateTwo();
     }
 
     @Override
-    public void updateRateOneRapid(int rateMin, int rateMax) {
+    public void updateRateOneRapid(double rateMin, double rateMax) {
         adminMapper.updateRateOneRapid(rateMin, rateMax);
     }
 

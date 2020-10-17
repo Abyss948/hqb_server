@@ -24,10 +24,10 @@ public class NeedController {
     public JsonResult<Object> needCalculate(@RequestParam("goalmoney") double goalmoney, @RequestParam("timelimit") double timelimit, @RequestParam("rate") double rate) {
         if (needService.isOverRate(rate,timelimit)) {
             Map<String, Object> map1 = new HashMap<>();
-            map1.put("rateMaxOne", adminService.getMaxRateOne() / 100.0);
-            map1.put("rateMinOne", adminService.getMinRateOne() / 100.0);
-            map1.put("rateMaxTwo", adminService.getMaxRateTwo() / 100.0);
-            map1.put("rateMinTwo", adminService.getMinRateTwo() / 100.0);
+            map1.put("rateMaxOne", adminService.getMaxRateOne());
+            map1.put("rateMinOne", adminService.getMinRateOne());
+            map1.put("rateMaxTwo", adminService.getMaxRateTwo());
+            map1.put("rateMinTwo", adminService.getMinRateTwo());
             return new JsonResult<>(map1, "1", "汇率超出范围");
         }
         if (timelimit < 0 || timelimit > 3)
@@ -49,7 +49,7 @@ public class NeedController {
         needService.setNewNeed(userid, rate, timelimit, goalmoney);
         Map<String, Object> map = new HashMap<>();
         map.put("matchList",needService.getMatchList(userid,rate,timelimit,goalmoney));
-        return new JsonResult<>();
+        return new JsonResult<>(map);
     }
 
 }

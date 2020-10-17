@@ -12,12 +12,12 @@ import java.util.Map;
 public interface AdminMapper {
     Admin getAdminByAdminName(String adminname);
 
-    int getMinRateOne();
-    int getMaxRateOne();
-    int getMinRateTwo();
-    int getMaxRateTwo();
+    double getMinRateOne();
+    double getMaxRateOne();
+    double getMinRateTwo();
+    double getMaxRateTwo();
 
-    void updateRateOneRapid(int rateMin, int rateMax);
+    void updateRateOneRapid(double rateMin, double rateMax);
     List<Map<String, Object>> getSuccessRecord();
 
 

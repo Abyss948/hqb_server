@@ -14,10 +14,9 @@ public class ProvideServicelmpl implements ProvideService {
 
     @Override
     public void setNewProvide(int userid, double rate, double timelimit, double goalmoney) {
-        int rateint = (int) (rate * 100);
         Map<String, Object> map = new HashMap<>();
         map.put("userid", userid);
-        map.put("rate", rateint);
+        map.put("rate", rate);
         map.put("timelimit", timelimit);
         map.put("goalmoney", goalmoney);
         provideMapper.updateOldProvide(userid);
