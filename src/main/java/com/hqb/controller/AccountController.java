@@ -16,34 +16,14 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @GetMapping("/getBalanceByUserid")
-    public JsonResult<Object> getBalanceByUserid(@RequestParam("userid") int userid) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("balance", accountService.getBalanceByUserid(userid));
-        //测试5
-        return new JsonResult<>(map, "查询成功");
-    }
 
-    @GetMapping("/getIncomeByUserid")
-    public JsonResult<Object> getIncomeByUserid(@RequestParam("userid") int userid) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("income", accountService.getIncomeByUserid(userid));
-        //测试5
-        return new JsonResult<>(map, "查询成功");
-    }
-    @GetMapping("/getDeptByUserid")
-    public JsonResult<Object> getDeptByUserid(@RequestParam("userid") int userid) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("dept", accountService.getDeptByUserid(userid));
-        //测试5
-        return new JsonResult<>(map, "查询成功");
-    }
 
     @GetMapping("/getOrderByUserid")
     public JsonResult<Map<String, Object>> getOrderByUserid(@RequestParam("userid") int userid)
     {
         Map<String, Object> map = new HashMap<>();
-        map.put("order",accountService.getOrderByUserid(userid));
+        map.put("needorder",accountService.getNeedOrderByUserid(userid));
+        map.put("provideorder",accountService.getProvideOrderByUserid(userid));
         return new JsonResult<>(map);
     }
     @GetMapping("/getTradepartnerByUserid")
@@ -53,5 +33,16 @@ public class AccountController {
 
         map.put("record", accountService.getTradepartnerByUserid(userid));
         return new JsonResult<>(map,"success");
+    }
+
+    @GetMapping("/getBanlanceInfoByUserid")
+    public JsonResult<Object> getBalanceInfoByUserid(@RequestParam("userid")int userid)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("balance", accountService.getBalanceByUserid(userid));
+        //测试5
+        map.put("income", accountService.getIncomeByUserid(userid));
+        map.put("dept", accountService.getDeptByUserid(userid));
+        return new JsonResult<>(map, "查询成功");
     }
 }

@@ -30,13 +30,16 @@ public class AccoutServiceImpl  implements AccountService{
     {
         return accountMapper.getDeptByUserid(userid);
     }
-
     @Override
-    public List<Map<String, Object>> getOrderByUserid(int userid)
+    public List<Map<String, Object>> getProvideOrderByUserid(int userid)
     {
-        return accountMapper.getOrderByUserid(userid);
+        return accountMapper.getProvideOrderByUserid(userid);
     }
-
+    @Override
+    public List<Map<String, Object>> getNeedOrderByUserid(int userid)
+    {
+        return accountMapper.getNeedOrderByUserid(userid);
+    }
     @Override
     public Map<String,Integer> getTradepartnerByUserid(int userid)
     {
