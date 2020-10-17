@@ -9,23 +9,23 @@
     </select>
 
 
-    <select id="getMinRateOne" resultType="int">
+    <select id="getMinRateOne" resultType="double">
         select ratemin from admin where adminid=1
     </select>
 
-    <select id="getMaxRateOne" resultType="int">
+    <select id="getMaxRateOne" resultType="double">
         select rateMax from admin where adminid=1
     </select>
 
-    <select id="getMinRateTwo" resultType="int">
+    <select id="getMinRateTwo" resultType="double">
         select ratemin from admin where adminid=2
     </select>
 
-    <select id="getMaxRateTwo" resultType="int">
+    <select id="getMaxRateTwo" resultType="double">
         select rateMax from admin where adminid=2
     </select>
 
-    <update id="updateRateOneRapid" parameterType="int">
+    <update id="updateRateOneRapid" parameterType="double">
         update admin set ratemin=#{rateMin},ratemax=#{rateMax} where adminid=1
     </update>
 
