@@ -50,6 +50,8 @@ public class ProvideController {
     @PostMapping("/setNewProvide")
     public JsonResult<Object> setNewProvide(@RequestParam("userid") int userid, @RequestParam("rate") double rate, @RequestParam("timelimit") double timelimit, @RequestParam("goalmoney") double goalmoney) {
         provideService.setNewProvide(userid, rate, timelimit, goalmoney);
-        return new JsonResult<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("matchList",provideService.getMatchList(userid,rate,timelimit,goalmoney));
+        return new JsonResult<>(map);
     }
 }

@@ -12,4 +12,21 @@
         update provide set status=1 where userid=#{userid}
     </update>
 
+    <select id="getTimeRateMatchList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select need.needid as needid,user.userid as userid,user.username as username,need.goalmoney-need.nowmoney as money,need.rate as rate,need.timelimit as timelimit
+        from need,user
+        where user.userid=need.userid and need.userid &lt;&gt; ${userid} and need.timelimit=${timelimit} and need.status=0 and need.rate=${rate} and user.tcontract=0
+    </select>
+
+    <select id="getTimeMatchList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select need.needid as needid,user.userid as userid,user.username as username,need.goalmoney-need.nowmoney as money,need.rate as rate,need.timelimit as timelimit
+        from need,user
+        where user.userid=need.userid and need.userid &lt;&gt; ${userid} and need.timelimit=${timelimit} and need.status=0 and need.rate &lt;&gt; ${rate} and user.tcontract=0
+    </select>
+
+    <select id="getRateMatchList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select need.needid as needid,user.userid as userid,user.username as username,need.goalmoney-need.nowmoney as money,need.rate as rate,need.timelimit as timelimit
+        from need,user
+        where user.userid=need.userid and need.userid &lt;&gt; ${userid} and need.timelimit &lt;&gt; ${timelimit} and need.status=0 and need.rate = ${rate} and user.tcontract=0
+    </select>
 </mapper>

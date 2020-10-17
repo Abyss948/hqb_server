@@ -80,7 +80,10 @@ public class NeedServicelmpl implements NeedService {
         map.put("timelimit",timelimit);
         map.put("rate",rate);
         List<Map<String, Object>> list1 = needMapper.getTimeRateMatchList(map);
-        /*List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);*/
+        List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);
+        List<Map<String, Object>> list3 = needMapper.getRateMatchList(map);
+        list1.addAll(list2);
+        list1.addAll(list3);
         return list1;
     }
 }

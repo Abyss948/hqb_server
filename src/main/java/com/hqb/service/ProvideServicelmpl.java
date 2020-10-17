@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -50,5 +51,19 @@ public class ProvideServicelmpl implements ProvideService {
             timeRate = 1;
         }
         return goalmoney * serviceRate * timeRate;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMatchList(int userid, double rate, double timelimit, double goalmoney) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("userid",userid);
+        map.put("timelimit",timelimit);
+        map.put("rate",rate);
+        List<Map<String, Object>> list1 = provideMapper.getTimeRateMatchList(map);
+        List<Map<String, Object>> list2 = provideMapper.getTimeMatchList(map);
+        List<Map<String, Object>> list3 = provideMapper.getRateMatchList(map);
+        list1.addAll(list2);
+        list1.addAll(list3);
+        return list1;
     }
 }

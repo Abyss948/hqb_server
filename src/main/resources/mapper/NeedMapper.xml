@@ -13,8 +13,20 @@
     </update>
 
     <select id="getTimeRateMatchList" parameterType="java.util.Map" resultType="java.util.HashMap">
-        select provide.provideid as provideid,user.userid as userid,user.username as username,provide.goalmoney as goalmoney,provide.nowmoney as nowmoney,provide.rate as rate,provide.timelimit as timelimit
+        select provide.provideid as provideid,user.userid as userid,user.username as username,provide.goalmoney-provide.nowmoney as money,provide.rate as rate,provide.timelimit as timelimit
         from provide,user
         where user.userid=provide.userid and provide.userid &lt;&gt; ${userid} and provide.timelimit=${timelimit} and provide.status=0 and provide.rate=${rate} and user.tcontract=0
+    </select>
+
+    <select id="getTimeMatchList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select provide.provideid as provideid,user.userid as userid,user.username as username,provide.goalmoney-provide.nowmoney as money,provide.rate as rate,provide.timelimit as timelimit
+        from provide,user
+        where user.userid=provide.userid and provide.userid &lt;&gt; ${userid} and provide.timelimit=${timelimit} and provide.status=0 and provide.rate &lt;&gt; ${rate} and user.tcontract=0
+    </select>
+
+    <select id="getRateMatchList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select provide.provideid as provideid,user.userid as userid,user.username as username,provide.goalmoney-provide.nowmoney as money,provide.rate as rate,provide.timelimit as timelimit
+        from provide,user
+        where user.userid=provide.userid and provide.userid &lt;&gt; ${userid} and provide.timelimit &lt;&gt; ${timelimit} and provide.status=0 and provide.rate = ${rate} and user.tcontract=0
     </select>
 </mapper>
