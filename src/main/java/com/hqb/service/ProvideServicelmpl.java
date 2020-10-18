@@ -1,6 +1,9 @@
 package com.hqb.service;
 
+import com.hqb.mapper.NeedMapper;
 import com.hqb.mapper.ProvideMapper;
+import com.hqb.pojo.Need;
+import com.hqb.pojo.Provide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,9 @@ import java.util.Map;
 public class ProvideServicelmpl implements ProvideService {
     @Autowired
     ProvideMapper provideMapper;
+
+    @Autowired
+    NeedMapper needMapper;
 
     @Override
     public void setNewProvide(int userid, double rate, double timelimit, double goalmoney) {
@@ -65,5 +71,21 @@ public class ProvideServicelmpl implements ProvideService {
         list1.addAll(list2);
         list1.addAll(list3);
         return list1;
+    }
+
+    @Override
+    public Map<String, Object> provideSimulate(int userid, int needid) {
+        double provideMoney = provideMapper.getMoneyByUserid(userid);
+        Need need = needMapper.getNeedByNeedid(needid);
+        double successMoney = Math.min(provideMoney,need.getGoalmoney()-need.getNowmoney());
+        double rate = need.getRate();
+        double timelimit = need.getTimelimit();
+        double servicefee = getServicefee(successMoney, timelimit);
+        Map<String,Object> map = new HashMap<>();
+        map.put("successMoney",successMoney);
+        map.put("rate",rate);
+        map.put("timelimit",timelimit);
+        map.put("servicefee",servicefee);
+        return map;
     }
 }

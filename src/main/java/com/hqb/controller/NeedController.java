@@ -52,4 +52,10 @@ public class NeedController {
         return new JsonResult<>(map);
     }
 
+    @PostMapping("/needSimulate")
+    public JsonResult<Object> needSimulate(@RequestParam("userid") int userid, @RequestParam("provideid") int provideid) {
+        Map<String, Object> map = needService.needSimulate(userid,provideid);
+        return new JsonResult<>(map);
+    }
+
 }

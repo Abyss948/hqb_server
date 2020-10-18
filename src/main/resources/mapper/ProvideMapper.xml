@@ -29,4 +29,12 @@
         from need,user
         where user.userid=need.userid and need.userid &lt;&gt; ${userid} and need.timelimit &lt;&gt; ${timelimit} and need.status=0 and need.rate = ${rate} and user.tcontract=0
     </select>
+
+    <select id="getProvideByProvideid" parameterType="int" resultType="com.hqb.pojo.Provide">
+        select * from provide where provideid = ${provideid}
+    </select>
+
+    <select id="getMoneyByUserid" parameterType="int" resultType="double">
+        select provide.goalmoney-provide.nowmoney from provide where provide.userid = ${userid} and provide.status = 0
+    </select>
 </mapper>

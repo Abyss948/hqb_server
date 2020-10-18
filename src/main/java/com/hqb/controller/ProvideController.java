@@ -54,4 +54,10 @@ public class ProvideController {
         map.put("matchList",provideService.getMatchList(userid,rate,timelimit,goalmoney));
         return new JsonResult<>(map);
     }
+
+    @PostMapping("/provideSimulate")
+    public JsonResult<Object> provideSimulate(@RequestParam("userid") int userid, @RequestParam("needid") int needid) {
+        Map<String, Object> map = provideService.provideSimulate(userid,needid);
+        return new JsonResult<>(map);
+    }
 }

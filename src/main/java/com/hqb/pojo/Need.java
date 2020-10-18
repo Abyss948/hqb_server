@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class Need {
     private int needid;
     private int userid;
-    private int rate;
+    private double rate;
     private double timelimit;
     private double goalmoney;
     private double nowmoney;

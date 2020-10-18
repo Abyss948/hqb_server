@@ -1,5 +1,6 @@
 package com.hqb.mapper;
 
+import com.hqb.pojo.Provide;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,8 @@ public interface ProvideMapper {
     List<Map<String, Object>> getTimeRateMatchList(Map<String, Object> mapTime);
     List<Map<String, Object>> getTimeMatchList(Map<String, Object> map);
     List<Map<String, Object>> getRateMatchList(Map<String, Object> map);
+
+    Provide getProvideByProvideid(int provideid);
+
+    double getMoneyByUserid(int userid);
 }

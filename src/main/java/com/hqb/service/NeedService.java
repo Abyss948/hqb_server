@@ -11,4 +11,6 @@ public interface NeedService {
     double getServicefee(double goalmoney,double timelimit);
 
     List<Map<String,Object>> getMatchList(int userid, double rate, double timelimit, double goalmoney);
+
+    Map<String, Object> needSimulate(int userid, int provideid);
 }

@@ -1,5 +1,6 @@
 package com.hqb.mapper;
 
+import com.hqb.pojo.Need;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,8 @@ public interface NeedMapper {
     List<Map<String, Object>> getTimeRateMatchList(Map<String, Object> mapTime);
     List<Map<String, Object>> getTimeMatchList(Map<String, Object> map);
     List<Map<String, Object>> getRateMatchList(Map<String, Object> map);
+
+    double getMoneyByUserid(int userid);
+
+    Need getNeedByNeedid(int needid);
 }
