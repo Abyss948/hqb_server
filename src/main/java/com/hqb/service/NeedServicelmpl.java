@@ -24,6 +24,9 @@ public class NeedServicelmpl implements NeedService {
     @Autowired
     ProvideMapper provideMapper;
 
+    @Autowired
+    ProvideService provideService;
+
     @Override
     public void setNewNeed(int userid, double rate, double timelimit, double goalmoney) {
         Map<String, Object> map = new HashMap<>();
@@ -112,27 +115,48 @@ public class NeedServicelmpl implements NeedService {
 
     @Override
     public void needSuccess(int userid, int provideid) {
-        /*Map<String,Object> map = needSimulate(userid,provideid);
-        double successMoney = (double)map.get("successMoney");
-        double timelimit = (double)map.get("timelimit");
-        double rate = (double)map.get("rate");
-        double servicefee = (double)map.get("servicefee");
+
         Need need = needMapper.getNeedByUserid(userid);
         Provide provide = provideMapper.getProvideByProvideid(provideid);
-        Map<String,Object> mapin = new HashMap<>();
-        mapin.put("needid",need.getNeedid());
-        mapin.put("provideid",provide.getProvideid());
-        mapin.put("nid",need.getUserid());
-        mapin.put("pid",provide.getUserid());
-        mapin.put("rate",rate);
-        mapin.put("timelimit",provide.getTimelimit());
+
+        double successMoney = Math.min(need.getGoalmoney()-need.getNowmoney(),provide.getGoalmoney()-provide.getNowmoney());
+        double timelimit = provide.getTimelimit();
+        double rate = provide.getRate();
+        double nservicefee = getServicefee(successMoney, timelimit);
+        double pservicefee = provideService.getServicefee(successMoney,timelimit);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("needid",need.getNeedid());
+        map.put("provideid",provide.getProvideid());
+        map.put("nid",need.getUserid());
+        map.put("pid",provide.getUserid());
+        map.put("rate",rate);
+        map.put("timelimit",timelimit);
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         long nextTimeLong = currentTime.getTime()+(long)1000*360*24*365*(long)(timelimit*10);
         Timestamp nextTime = new Timestamp(nextTimeLong);
-        mapin.put("starttime",currentTime);
-        mapin.put("endtime",nextTime);
-        mapin.put("money",successMoney);
-        mapin.put("servicefee",servicefee);
-        needMapper.addSuccess(mapin);*/
+        map.put("starttime",currentTime);
+        map.put("endtime",nextTime);
+        map.put("money",successMoney);
+        map.put("nservicefee",nservicefee);
+        map.put("pservicefee",pservicefee);
+        needMapper.addSuccess(map);
+
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("nowmoney",successMoney+need.getNowmoney());
+        map1.put("needid",need.getNeedid());
+
+        Map<String,Object> map2 = new HashMap<>();
+        map2.put("nowmoney",successMoney+provide.getNowmoney());
+        map2.put("provideid",provide.getProvideid());
+
+        needMapper.updateNowMoney(map1);
+        provideMapper.updateNowMoney(map2);
+        if(successMoney+need.getNowmoney()==need.getGoalmoney()){
+            needMapper.updateOldNeed(userid);
+        }
+        if(successMoney+provide.getNowmoney()==provide.getGoalmoney()){
+            provideMapper.updateOldProvide(provide.getUserid());
+        }
     }
 }

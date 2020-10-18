@@ -7,6 +7,7 @@ import com.hqb.pojo.Provide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,9 @@ public class ProvideServicelmpl implements ProvideService {
 
     @Autowired
     NeedMapper needMapper;
+
+    @Autowired
+    NeedService needservice;
 
     @Override
     public void setNewProvide(int userid, double rate, double timelimit, double goalmoney) {
@@ -87,5 +91,52 @@ public class ProvideServicelmpl implements ProvideService {
         map.put("timelimit",timelimit);
         map.put("servicefee",servicefee);
         return map;
+    }
+
+    @Override
+    public void provideSuccess(int userid, int needid) {
+
+        Provide provide = provideMapper.getProvideByUserid(userid);
+        Need need = needMapper.getNeedByNeedid(needid);
+
+        double successMoney = Math.min(need.getGoalmoney()-need.getNowmoney(),provide.getGoalmoney()-provide.getNowmoney());
+        double timelimit = need.getTimelimit();
+        double rate = need.getRate();
+        double pservicefee = getServicefee(successMoney, timelimit);
+        double nservicefee = needservice.getServicefee(successMoney,timelimit);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("needid",need.getNeedid());
+        map.put("provideid",provide.getProvideid());
+        map.put("nid",need.getUserid());
+        map.put("pid",provide.getUserid());
+        map.put("rate",rate);
+        map.put("timelimit",timelimit);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        long nextTimeLong = currentTime.getTime()+(long)1000*360*24*365*(long)(timelimit*10);
+        Timestamp nextTime = new Timestamp(nextTimeLong);
+        map.put("starttime",currentTime);
+        map.put("endtime",nextTime);
+        map.put("money",successMoney);
+        map.put("nservicefee",nservicefee);
+        map.put("pservicefee",pservicefee);
+        needMapper.addSuccess(map);
+
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("nowmoney",successMoney+need.getNowmoney());
+        map1.put("needid",need.getNeedid());
+
+        Map<String,Object> map2 = new HashMap<>();
+        map2.put("nowmoney",successMoney+provide.getNowmoney());
+        map2.put("provideid",provide.getProvideid());
+
+        needMapper.updateNowMoney(map1);
+        provideMapper.updateNowMoney(map2);
+        if(successMoney+need.getNowmoney()==need.getGoalmoney()){
+            needMapper.updateOldNeed(userid);
+        }
+        if(successMoney+provide.getNowmoney()==provide.getGoalmoney()){
+            provideMapper.updateOldProvide(provide.getUserid());
+        }
     }
 }

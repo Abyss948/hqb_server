@@ -11,4 +11,6 @@ public interface ProvideService {
     List<Map<String,Object>> getMatchList(int userid, double rate, double timelimit, double goalmoney);
 
     Map<String, Object> provideSimulate(int userid, int needid);
+
+    void provideSuccess(int userid, int needid);
 }
