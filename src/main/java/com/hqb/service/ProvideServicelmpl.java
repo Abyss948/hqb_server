@@ -56,7 +56,7 @@ public class ProvideServicelmpl implements ProvideService {
         } else if (timelimit <= 3) {
             timeRate = 1;
         }
-        return goalmoney * serviceRate * timeRate;
+        return (Math.round(goalmoney * serviceRate * timeRate*100)/100.0);
     }
 
     @Override

@@ -58,4 +58,10 @@ public class NeedController {
         return new JsonResult<>(map);
     }
 
+
+    @PostMapping("/needSuccess")
+    public JsonResult<Object> needSuccess(@RequestParam("userid") int userid, @RequestParam("provideid") int provideid) {
+        needService.needSuccess(userid,provideid);
+        return new JsonResult<>();
+    }
 }

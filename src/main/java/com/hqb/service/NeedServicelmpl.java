@@ -3,10 +3,12 @@ package com.hqb.service;
 import com.hqb.mapper.AdminMapper;
 import com.hqb.mapper.NeedMapper;
 import com.hqb.mapper.ProvideMapper;
+import com.hqb.pojo.Need;
 import com.hqb.pojo.Provide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +77,7 @@ public class NeedServicelmpl implements NeedService {
         } else if (timelimit <= 3) {
             timeRate = 3;
         }
-        return goalmoney * serviceRate * timeRate;
+        return (Math.round(goalmoney * serviceRate * timeRate*100)/100.0);
     }
 
     @Override
@@ -106,5 +108,31 @@ public class NeedServicelmpl implements NeedService {
         map.put("timelimit",timelimit);
         map.put("servicefee",servicefee);
         return map;
+    }
+
+    @Override
+    public void needSuccess(int userid, int provideid) {
+        /*Map<String,Object> map = needSimulate(userid,provideid);
+        double successMoney = (double)map.get("successMoney");
+        double timelimit = (double)map.get("timelimit");
+        double rate = (double)map.get("rate");
+        double servicefee = (double)map.get("servicefee");
+        Need need = needMapper.getNeedByUserid(userid);
+        Provide provide = provideMapper.getProvideByProvideid(provideid);
+        Map<String,Object> mapin = new HashMap<>();
+        mapin.put("needid",need.getNeedid());
+        mapin.put("provideid",provide.getProvideid());
+        mapin.put("nid",need.getUserid());
+        mapin.put("pid",provide.getUserid());
+        mapin.put("rate",rate);
+        mapin.put("timelimit",provide.getTimelimit());
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        long nextTimeLong = currentTime.getTime()+(long)1000*360*24*365*(long)(timelimit*10);
+        Timestamp nextTime = new Timestamp(nextTimeLong);
+        mapin.put("starttime",currentTime);
+        mapin.put("endtime",nextTime);
+        mapin.put("money",successMoney);
+        mapin.put("servicefee",servicefee);
+        needMapper.addSuccess(mapin);*/
     }
 }
