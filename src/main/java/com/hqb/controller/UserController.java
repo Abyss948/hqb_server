@@ -47,7 +47,7 @@ public class UserController {
         try {
             subject.login(usernamePasswordToken);
             User user = userService.getUserByUserName(username);
-            return new JsonResult<>("登陆成功");
+            return new JsonResult<>(user.getInfo(),"登陆成功");
         }catch (UnknownAccountException e){
             return new JsonResult<>("1","用户名不存在");
         }catch (IncorrectCredentialsException e){
