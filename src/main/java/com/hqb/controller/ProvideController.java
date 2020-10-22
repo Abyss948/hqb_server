@@ -60,4 +60,10 @@ public class ProvideController {
         Map<String, Object> map = provideService.provideSimulate(userid,needid);
         return new JsonResult<>(map);
     }
+
+    @PostMapping("/provideSuccess")
+    public JsonResult<Object> provideSuccess(@RequestParam("userid") int userid, @RequestParam("needid") int needid) {
+        provideService.provideSuccess(userid,needid);
+        return new JsonResult<>();
+    }
 }

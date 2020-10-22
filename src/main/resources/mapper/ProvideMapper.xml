@@ -37,4 +37,12 @@
     <select id="getMoneyByUserid" parameterType="int" resultType="double">
         select provide.goalmoney-provide.nowmoney from provide where provide.userid = ${userid} and provide.status = 0
     </select>
+
+    <update id="updateNowMoney" parameterType="java.util.Map">
+        update provide set nowmoney=#{nowmoney} where provideid=#{provideid}
+    </update>
+
+    <select id="getProvideByUserid" parameterType="int" resultType="com.hqb.pojo.Provide">
+        select * from provide where userid=#{userid} and status=0
+    </select>
 </mapper>

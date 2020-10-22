@@ -37,4 +37,17 @@
     <select id="getNeedByNeedid" parameterType="int" resultType="com.hqb.pojo.Need">
         select * from need where needid = ${needid}
     </select>
+
+    <select id="getNeedByUserid" parameterType="int" resultType="com.hqb.pojo.Need">
+        select * from need where userid=${userid} and status=0
+    </select>
+
+    <insert id="addSuccess" parameterType="java.util.Map" useGeneratedKeys="true" keyColumn="successid">
+        insert into success(needid,provideid,nid,pid,rate,timelimit,starttime,endtime,money,nservicefee,pservicefee)
+        values(#{needid},#{provideid},#{nid},#{pid},#{rate},#{timelimit},#{starttime},#{endtime},#{money},#{nservicefee},#{pservicefee})
+    </insert>
+
+    <update id="updateNowMoney" parameterType="java.util.Map">
+        update need set nowmoney=#{nowmoney} where needid=#{needid}
+    </update>
 </mapper>

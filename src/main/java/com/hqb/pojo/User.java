@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +24,15 @@ public class User {
     private int tcontract;
     private int credit;
     private int status;
+
+    public Map<String,Object> getInfo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("username", username);
+        map.put("bankcard", bankcard);
+        map.put("balance", balance);
+        map.put("status", status);
+        return map;
+    }
 
 }

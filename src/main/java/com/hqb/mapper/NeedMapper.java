@@ -20,4 +20,9 @@ public interface NeedMapper {
     double getMoneyByUserid(int userid);
 
     Need getNeedByNeedid(int needid);
+    Need getNeedByUserid(int userid);
+
+    void addSuccess(Map<String, Object> map);
+
+    void updateNowMoney(Map<String, Object> map);
 }

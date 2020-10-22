@@ -18,6 +18,11 @@ public interface ProvideMapper {
     List<Map<String, Object>> getRateMatchList(Map<String, Object> map);
 
     Provide getProvideByProvideid(int provideid);
+    Provide getProvideByUserid(int userid);
 
     double getMoneyByUserid(int userid);
+
+    void updateNowMoney(Map<String, Object> map);
+
+
 }
