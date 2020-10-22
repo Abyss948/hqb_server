@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqb.mapper.WebRateMapper">
+
+
+
+
+    <update id="setWebLongMaxRate"  parameterType="Double">
+       update admin set ratemax=#{longmaxrate}where adminid=2
+    </update>
+    <update id="setWebLongMinRate"  parameterType="Double">
+       update admin set ratemin=#{longminrate}where adminid=2
+    </update>
+
+    <update id="setWebShortMaxRate"  parameterType="Double">
+       update admin set ratemax=#{shortmaxrate}where adminid=1
+    </update>
+
+    <update id="setWebShortMinRate"  parameterType="Double">
+       update admin set ratemin=#{shortminrate}where adminid=1
+    </update>
+
+
+
+
+
+
+</mapper>

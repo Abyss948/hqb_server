@@ -6,7 +6,7 @@
 
 
     <select id="getMyByUserid" resultType="java.util.HashMap" parameterType="int">
-  select username, bankcard, tcontract,balance,sum(money*rate*TIMESTAMPDIFF(year,NOW(),starttime)+money)
+  select username, bankcard, tcontract,balance,sum(money*rate*timelimit+money)
   from user left join success on userid=needid
   where userid=#{userid}
     </select>
