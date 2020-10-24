@@ -5,7 +5,7 @@
 <mapper namespace="com.hqb.mapper.NeedMapper">
 
     <insert id="setNewNeed" parameterType="map" useGeneratedKeys="true" keyColumn="needid">
-        insert into need(userid,rate,timelimit,goalmoney,nowmoney,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,0)
+        insert into need(userid,rate,timelimit,goalmoney,nowmoney,starttime,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,#{starttime},0)
     </insert>
 
     <update id="updateOldNeed" parameterType="int">

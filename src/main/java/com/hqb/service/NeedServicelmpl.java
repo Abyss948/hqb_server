@@ -34,6 +34,8 @@ public class NeedServicelmpl implements NeedService {
         map.put("rate", rate);
         map.put("timelimit", timelimit);
         map.put("goalmoney", goalmoney);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        map.put("starttime",currentTime);
         needMapper.updateOldNeed(userid);
         needMapper.setNewNeed(map);
 

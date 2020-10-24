@@ -5,7 +5,7 @@
 <mapper namespace="com.hqb.mapper.ProvideMapper">
 
     <insert id="setNewProvide" parameterType="map" useGeneratedKeys="true" keyColumn="needid">
-        insert into provide(userid,rate,timelimit,goalmoney,nowmoney,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,0)
+        insert into provide(userid,rate,timelimit,goalmoney,nowmoney,starttime,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,#{starttime},0)
     </insert>
 
     <update id="updateOldProvide" parameterType="int">

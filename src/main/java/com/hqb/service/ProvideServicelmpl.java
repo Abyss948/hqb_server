@@ -30,6 +30,8 @@ public class ProvideServicelmpl implements ProvideService {
         map.put("rate", rate);
         map.put("timelimit", timelimit);
         map.put("goalmoney", goalmoney);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        map.put("starttime",currentTime);
         provideMapper.updateOldProvide(userid);
         provideMapper.setNewProvide(map);
     }
