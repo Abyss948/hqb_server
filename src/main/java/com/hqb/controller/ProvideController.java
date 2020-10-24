@@ -1,6 +1,8 @@
 package com.hqb.controller;
 
+import com.hqb.mapper.ProvideMapper;
 import com.hqb.pojo.JsonResult;
+import com.hqb.pojo.Provide;
 import com.hqb.service.AdminService;
 import com.hqb.service.NeedService;
 import com.hqb.service.ProvideService;
@@ -22,6 +24,9 @@ public class ProvideController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    ProvideMapper provideMapper;
 
     @PostMapping("/provideCalculate")
     public JsonResult<Object> provideCalculate(@RequestParam("goalmoney") double goalmoney, @RequestParam("timelimit") double timelimit, @RequestParam("rate") double rate) {
@@ -50,10 +55,23 @@ public class ProvideController {
     @PostMapping("/setNewProvide")
     public JsonResult<Object> setNewProvide(@RequestParam("userid") int userid, @RequestParam("rate") double rate, @RequestParam("timelimit") double timelimit, @RequestParam("goalmoney") double goalmoney) {
         provideService.setNewProvide(userid, rate, timelimit, goalmoney);
+        return new JsonResult<>();
+    }
+
+    @PostMapping("/getProvideMatchList")
+    public JsonResult<Object> getProvideMatchList(@RequestParam("userid") int userid) {
         Map<String, Object> map = new HashMap<>();
-        map.put("matchList",provideService.getMatchList(userid,rate,timelimit,goalmoney));
+        map.put("matchList",provideService.getProvideMatchList(userid));
+        Provide provide = provideMapper.getProvideByUserid(userid);
+        map.put("nowmoney",provide.getNowmoney());
+        map.put("goalmoney",provide.getGoalmoney());
+        map.put("money",provide.getGoalmoney()-provide.getNowmoney());
+        map.put("rate",provide.getRate());
+        map.put("timelimit",provide.getTimelimit());
         return new JsonResult<>(map);
     }
+
+
 
     @PostMapping("/provideSimulate")
     public JsonResult<Object> provideSimulate(@RequestParam("userid") int userid, @RequestParam("needid") int needid) {

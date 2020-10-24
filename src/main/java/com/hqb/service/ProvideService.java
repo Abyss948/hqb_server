@@ -13,4 +13,6 @@ public interface ProvideService {
     Map<String, Object> provideSimulate(int userid, int needid);
 
     void provideSuccess(int userid, int needid);
+
+    List<Map<String,Object>> getProvideMatchList(int userid);
 }

@@ -45,4 +45,9 @@
     <select id="getProvideByUserid" parameterType="int" resultType="com.hqb.pojo.Provide">
         select * from provide where userid=#{userid} and status=0
     </select>
+
+    <update id="updateProvide" parameterType="int">
+        update provide set status=1 where provideid=#{provideid}
+    </update>
+
 </mapper>

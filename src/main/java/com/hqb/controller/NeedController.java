@@ -1,6 +1,8 @@
 package com.hqb.controller;
 
+import com.hqb.mapper.NeedMapper;
 import com.hqb.pojo.JsonResult;
+import com.hqb.pojo.Need;
 import com.hqb.service.AdminService;
 import com.hqb.service.NeedService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class NeedController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    NeedMapper needMapper;
 
     @PostMapping("/needCalculate")
     public JsonResult<Object> needCalculate(@RequestParam("goalmoney") double goalmoney, @RequestParam("timelimit") double timelimit, @RequestParam("rate") double rate) {
@@ -47,8 +52,19 @@ public class NeedController {
     @PostMapping("/setNewNeed")
     public JsonResult<Object> setNewNeed(@RequestParam("userid") int userid, @RequestParam("rate") double rate, @RequestParam("timelimit") double timelimit, @RequestParam("goalmoney") double goalmoney) {
         needService.setNewNeed(userid, rate, timelimit, goalmoney);
+        return new JsonResult<>();
+    }
+
+    @PostMapping("/getNeedMatchList")
+    public JsonResult<Object> getNeedMatchList(@RequestParam("userid") int userid){
         Map<String, Object> map = new HashMap<>();
-        map.put("matchList",needService.getMatchList(userid,rate,timelimit,goalmoney));
+        map.put("matchList",needService.getNeedMatchList(userid));
+        Need need = needMapper.getNeedByUserid(userid);
+        map.put("nowmoney",need.getNowmoney());
+        map.put("goalmoney",need.getGoalmoney());
+        map.put("money",need.getGoalmoney()-need.getNowmoney());
+        map.put("rate",need.getRate());
+        map.put("timelimit",need.getTimelimit());
         return new JsonResult<>(map);
     }
 

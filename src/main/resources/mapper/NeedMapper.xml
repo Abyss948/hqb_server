@@ -50,4 +50,8 @@
     <update id="updateNowMoney" parameterType="java.util.Map">
         update need set nowmoney=#{nowmoney} where needid=#{needid}
     </update>
+
+    <update id="updateNeed" parameterType="int">
+        update need set status=1 where needid=#{needid}
+    </update>
 </mapper>

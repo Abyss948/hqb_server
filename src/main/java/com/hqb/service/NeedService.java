@@ -1,5 +1,7 @@
 package com.hqb.service;
 
+import com.hqb.pojo.Need;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,4 +16,7 @@ public interface NeedService {
 
     Map<String, Object> needSimulate(int userid, int provideid);
     void needSuccess(int userid, int provideid);
+
+    List<Map<String,Object>> getNeedMatchList(int userid);
+
 }

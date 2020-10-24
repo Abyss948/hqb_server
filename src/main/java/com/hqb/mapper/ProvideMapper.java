@@ -24,5 +24,5 @@ public interface ProvideMapper {
 
     void updateNowMoney(Map<String, Object> map);
 
-
+    void updateProvide(int provideid);
 }

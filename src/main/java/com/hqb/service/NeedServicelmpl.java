@@ -98,6 +98,21 @@ public class NeedServicelmpl implements NeedService {
     }
 
     @Override
+    public List<Map<String, Object>> getNeedMatchList(int userid) {
+        Need need = needMapper.getNeedByUserid(userid);
+        Map<String,Object> map = new HashMap<>();
+        map.put("userid",userid);
+        map.put("timelimit",need.getTimelimit());
+        map.put("rate",need.getRate());
+        List<Map<String, Object>> list1 = needMapper.getTimeRateMatchList(map);
+        List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);
+        List<Map<String, Object>> list3 = needMapper.getRateMatchList(map);
+        list1.addAll(list2);
+        list1.addAll(list3);
+        return list1;
+    }
+
+    @Override
     public Map<String, Object> needSimulate(int userid, int provideid) {
         double needMoney = needMapper.getMoneyByUserid(userid);
         Provide provide = provideMapper.getProvideByProvideid(provideid);
@@ -153,10 +168,10 @@ public class NeedServicelmpl implements NeedService {
         needMapper.updateNowMoney(map1);
         provideMapper.updateNowMoney(map2);
         if(successMoney+need.getNowmoney()==need.getGoalmoney()){
-            needMapper.updateOldNeed(userid);
+            needMapper.updateNeed(need.getNeedid());
         }
         if(successMoney+provide.getNowmoney()==provide.getGoalmoney()){
-            provideMapper.updateOldProvide(provide.getUserid());
+            provideMapper.updateProvide(provide.getProvideid());
         }
     }
 }

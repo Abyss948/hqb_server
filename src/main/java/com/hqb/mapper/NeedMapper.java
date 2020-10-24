@@ -25,4 +25,6 @@ public interface NeedMapper {
     void addSuccess(Map<String, Object> map);
 
     void updateNowMoney(Map<String, Object> map);
+
+    void updateNeed(int needid);
 }

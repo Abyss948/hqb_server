@@ -78,6 +78,21 @@ public class ProvideServicelmpl implements ProvideService {
     }
 
     @Override
+    public List<Map<String, Object>> getProvideMatchList(int userid) {
+        Provide provide = provideMapper.getProvideByUserid(userid);
+        Map<String,Object> map = new HashMap<>();
+        map.put("userid",userid);
+        map.put("timelimit",provide.getTimelimit());
+        map.put("rate",provide.getRate());
+        List<Map<String, Object>> list1 = provideMapper.getTimeRateMatchList(map);
+        List<Map<String, Object>> list2 = provideMapper.getTimeMatchList(map);
+        List<Map<String, Object>> list3 = provideMapper.getRateMatchList(map);
+        list1.addAll(list2);
+        list1.addAll(list3);
+        return list1;
+    }
+
+    @Override
     public Map<String, Object> provideSimulate(int userid, int needid) {
         double provideMoney = provideMapper.getMoneyByUserid(userid);
         Need need = needMapper.getNeedByNeedid(needid);
@@ -133,10 +148,10 @@ public class ProvideServicelmpl implements ProvideService {
         needMapper.updateNowMoney(map1);
         provideMapper.updateNowMoney(map2);
         if(successMoney+need.getNowmoney()==need.getGoalmoney()){
-            needMapper.updateOldNeed(userid);
+            needMapper.updateNeed(need.getNeedid());
         }
         if(successMoney+provide.getNowmoney()==provide.getGoalmoney()){
-            provideMapper.updateOldProvide(provide.getUserid());
+            provideMapper.updateProvide(provide.getProvideid());
         }
     }
 }
