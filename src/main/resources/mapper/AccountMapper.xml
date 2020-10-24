@@ -8,22 +8,22 @@
         select balance from user where userid=#{userid}
     </select>
     <select id="getIncomeByUserid" resultType="Double" parameterType="int">
-        select sum(timelimit*rate*money/100) as income from success where provideid=#{userid}
+        select sum(timelimit*rate*money/100)  income from success where pid=#{userid}
     </select>
     <select id="getDeptByUserid" resultType="Double" parameterType="int">
-        select sum(timelimit*rate*money/100+money) as dept from success where needid=#{userid}
+        select sum(timelimit*rate*money/100+money)  dept from success where nid=#{userid}
     </select>
     <select id="getProvideOrderByUserid" resultType="java.util.HashMap" parameterType="int">
-        select starttime,username,bankcard, money,rate/100,money*rate*timelimit/100 as interest,needid,provideid
-        from success join user on  user.userid=success.needid
-        where provideid=#{userid}
+        select starttime,username,bankcard, money,rate/100,money*rate*timelimit/100 interest,nid,pid
+        from success join user on  user.userid=success.nid
+        where pid=#{userid}
         order by starttime
     </select>
 
     <select id="getNeedOrderByUserid" resultType="java.util.HashMap" parameterType="int">
-        select starttime,username,bankcard, money,rate/100,money*rate*timelimit/100 as interest,needid,provideid
-        from success join user on user.userid=success.provideid
-        where needid=#{userid}
+        select starttime,username,bankcard, money,rate/100,money*rate*timelimit/100 interest,nid,pid
+        from success join user on user.userid=success.pid
+        where nid=#{userid}
         order by starttime
     </select>
 

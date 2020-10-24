@@ -23,6 +23,19 @@
     </update>
 
 
+    <select id="getWebShortRate" resultType="Double" parameterType="int">
+
+        SELECT avg(rate) FROM success WHERE DATEDIFF(starttime,NOW())=-#{day}
+        and 1.0>=timelimit
+    </select>
+
+    <select id="getWebLongRate" resultType="Double"  parameterType="int" >
+ SELECT avg(rate) FROM success WHERE DATEDIFF(starttime,NOW())=-#{day}
+
+        and timelimit>1.0
+    </select>
+
+
 
 
 

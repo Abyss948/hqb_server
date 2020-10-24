@@ -5,4 +5,6 @@ public interface WebRateService {
     void setWebLongMinRate(Double longminrate);
     void setWebShortMaxRate(Double shortmaxrate);
     void setWebShortMinRate(Double shortminrate);
+    Double getWebShortRate(int day);
+    Double getWebLongRate(int day);
 }

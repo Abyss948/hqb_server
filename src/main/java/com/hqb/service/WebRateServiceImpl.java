@@ -28,4 +28,13 @@ public class WebRateServiceImpl implements WebRateService {
     {
         webRateMapper.setWebShortMinRate(shortminrate);
     }
+
+   public  Double getWebShortRate(int day)
+   {
+       return webRateMapper.getWebShortRate(day);
+   }
+    public Double getWebLongRate(int day)
+    {
+        return webRateMapper.getWebLongRate(day);
+    }
 }
