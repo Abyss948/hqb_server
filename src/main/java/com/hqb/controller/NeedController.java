@@ -57,9 +57,12 @@ public class NeedController {
 
     @PostMapping("/getNeedMatchList")
     public JsonResult<Object> getNeedMatchList(@RequestParam("userid") int userid){
+        Need need = needMapper.getNeedByUserid(userid);
+        if(need==null){
+            return new JsonResult<>("1","已满");
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("matchList",needService.getNeedMatchList(userid));
-        Need need = needMapper.getNeedByUserid(userid);
         map.put("nowmoney",need.getNowmoney());
         map.put("goalmoney",need.getGoalmoney());
         map.put("money",need.getGoalmoney()-need.getNowmoney());

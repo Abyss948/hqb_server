@@ -60,9 +60,12 @@ public class ProvideController {
 
     @PostMapping("/getProvideMatchList")
     public JsonResult<Object> getProvideMatchList(@RequestParam("userid") int userid) {
+        Provide provide = provideMapper.getProvideByUserid(userid);
+        if(provide==null){
+            return new JsonResult<>("1","已满");
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("matchList",provideService.getProvideMatchList(userid));
-        Provide provide = provideMapper.getProvideByUserid(userid);
         map.put("nowmoney",provide.getNowmoney());
         map.put("goalmoney",provide.getGoalmoney());
         map.put("money",provide.getGoalmoney()-provide.getNowmoney());
