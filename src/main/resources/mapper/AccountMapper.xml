@@ -14,14 +14,14 @@
         select sum(timelimit*rate*money/100+money)  dept from success where nid=#{userid}
     </select>
     <select id="getProvideOrderByUserid" resultType="java.util.HashMap" parameterType="int">
-        select starttime,username,bankcard, money,rate/100,money*rate*timelimit/100 interest,nid,pid
+        select starttime,username,bankcard, money,rate,money*rate*timelimit/100 interest,nid,pid
         from success join user on  user.userid=success.nid
         where pid=#{userid}
         order by starttime
     </select>
 
     <select id="getNeedOrderByUserid" resultType="java.util.HashMap" parameterType="int">
-        select starttime,username,bankcard, money,rate/100,money*rate*timelimit/100 interest,nid,pid
+        select starttime,username,bankcard, money,rate,money*rate*timelimit/100 interest,nid,pid
         from success join user on user.userid=success.pid
         where nid=#{userid}
         order by starttime
