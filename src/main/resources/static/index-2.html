@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="axios.min.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>花旗银行后台管理系统&nbsp;调整利率</title>
+
+    <link href="CSS/HuaQicss.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        #RATE {
+            position: absolute;
+            width: 40%;
+            height: 48%;
+            z-index: 2;
+            top: 70%;
+            left: 35%;
+            box-shadow: 12px 12px 24px 12px #99A;
+            border-radius: 24px;
+        }
+
+        #利率 {
+            border-radius: 24px;
+            background-color: #CCC;
+        }
+
+        input {
+            height: 40px;
+            width: 100px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+<header><p id="title">&nbsp;&nbsp;&nbsp;花旗银行后台管理系统</p></header>
+<div id="wrap">
+    <div id="lNavTop">
+        <div id="lNavCon">
+            <ul>
+                <li><a href="index-0.html" target="_self">实时监管</a></li>
+                <li><a href="index-1.html" target="_self">交易记录</a></li>
+                <li><a href="index-2.html" target="_self">调整利率</a></li>
+                <li><a href="index-3.html" target="_self">流动性接口</a></li>
+                <li><a href="index-4.html" target="_self">手续费统计</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div id="chartLineBox" style="width: 80%;height: 70vh;margin: 0 auto"></div>
+    <br>
+    <div id="RATE">
+
+        <div>
+            <form id="利率" action="">
+                <br>
+                <h1 align="center">调整利率</h1><br>
+                <p align="center" style="size:50px;">
+                    短期借贷利率&nbsp;&nbsp;<input type="text" name="longmin1" v-model="shortmin" placeholder="请输入最低利率">%
+                    &nbsp;&nbsp;———&nbsp;&nbsp;
+                    <input type="text" name="longmax1" v-model="shortmax" placeholder="请输入最高利率">%
+                </p>
+                <br>
+                <p align="center" style="size:50px;">
+                    长期借贷利率&nbsp;&nbsp;<input type="text" name="shortmin1" v-model="longmin" placeholder="请输入最低利率">%
+                    &nbsp;&nbsp;———&nbsp;&nbsp;
+                    <input type="text" name="shortmax1" v-model="longmax" placeholder="请输入最高利率">%
+                </p>
+                <br>
+                <p align="center" style="size:70px;">
+                    <input type="button" class="button" value="确认" @click="setWebRate">
+                </p>
+                <br>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var app = new Vue({
+        el: "#wrap",
+        data: {//数据
+            admin: {},//存放用户登录的信息
+            shortmin: 0,
+            shortmax: 0,
+            longmin: 0,
+            longmax: 0,
+            arraylong: [],
+            arrayshort: []
+        },
+        methods: {
+            setWebRate() {
+                var _this = this;
+                var formData = new FormData();
+                formData.append("shortmin", _this.shortmin);
+                formData.append("shortmax", _this.shortmax);
+                formData.append("longmin", _this.longmin);
+                formData.append("longmax", _this.longmax);
+                axios({
+                    method: "post",
+                    url: "http://localhost:8090/setWebRate",
+                    data: formData,
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }).then(res => {
+                    if (res.data.code == '0') {
+                        alert(res.data.msg);
+                    } else {
+                        alert("修改失败");
+                    }
+                });
+            },
+            getRate() {
+                var _this = this;
+                axios.get("http://localhost:8090/getRateMinMax").then(res => {
+                    _this.shortmin = res.data.data.shortmin;
+                    _this.shortmax = res.data.data.shortmax;
+                    _this.longmin = res.data.data.longmin;
+                    _this.longmax = res.data.data.longmax;
+                });
+            },
+            getChart() {
+
+            },
+        },
+        created() {//生命周期函数
+            var userString = localStorage.getItem("admin");
+            if (userString) {
+                this.admin = JSON.parse(userString);
+            } else {
+                alert("您尚未登录，点击确定跳转至登录页面！");
+                location.href = "./login.html";
+            }
+            //查询当前汇率
+            this.getRate();
+            this.getChart();
+        },
+
+        mounted() {
+            this.chartLine = echarts.init(document.getElementById('chartLineBox'));
+            // 指定图表的配置项和数据
+            var _this = this;
+            var option = {
+                tooltip: {              //设置tip提示
+                    trigger: 'axis'
+                },
+
+                legend: {               //设置区分（哪条线属于什么）
+                    data: ['短期', '长期']
+                },
+                color: ['#8AE09F', '#FA6F53'],       //设置区分（每条线是什么颜色，和 legend 一一对应）
+                xAxis: {                //设置x轴
+                    type: 'category',
+                    boundaryGap: false,     //坐标轴两边不留白
+                    data: ['15', '14', '13', '12', '11', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1'],
+                    name: 'n天前',           //X轴 name
+                    nameTextStyle: {        //坐标轴名称的文字样式
+                        color: '#FA6F53',
+                        fontSize: 16,
+                        padding: [0, 0, 0, 20]
+                    },
+                    axisLine: {             //坐标轴轴线相关设置。
+                        lineStyle: {
+                            color: '#FA6F53',
+                        }
+                    }
+                },
+                yAxis: {
+                    name: '利率（%）',
+                    nameTextStyle: {
+                        color: '#FA6F53',
+                        fontSize: 16,
+                        padding: [0, 0, 10, 0]
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#FA6F53',
+                        }
+                    },
+                    type: 'value'
+                },
+                series: [
+                    {
+                        type: 'line',
+                    },
+                ]
+            };
+            axios.get("http://localhost:8090/getWebRate").then(res => {
+                console.log(res.data.data)
+                this.chartLine.setOption({ //加载数据图表
+                    series: [
+                        {
+                            name: '短期',
+                            data: res.data.data.arrayshort,
+                            type: 'line',               // 类型为折线图
+                            lineStyle: {                // 线条样式 => 必须使用normal属性
+                                normal: {
+                                    color: '#8AE09F',
+                                }
+                            },
+                        },
+                        {
+                            name: '长期',
+                            data: res.data.data.arraylong,
+                            type: 'line',
+                            lineStyle: {
+                                normal: {
+                                    color: '#FA6F53',
+                                }
+                            },
+                        }
+                    ]
+                });
+            });
+            // 使用刚指定的配置项和数据显示图表。
+            this.chartLine.setOption(option);
+        },
+    });
+</script>

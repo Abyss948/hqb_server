@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="axios.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>花旗银行后台登录页面</title>
+    <style type="text/css">
+        #apDiv1 {
+            position: absolute;
+            width: 50%;
+            height: 80%;
+            z-index: 2;
+            top: 25%;
+            left: 25%;
+        }
+
+        #登录 {
+            border-radius: 24px;
+            background-color: #1E72B6;
+        }
+
+        input {
+            height: 40px;
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<img width="100%" height="100%" src="image/bgimage.png" style="position:absolute; left:0; top:0; z-index:-1;"/>
+<div id="apDiv1">
+    <form action="index-0.html" method="post" id="登录">
+        <br>
+        <h2 align="center">登录</h2><br>
+        <h2 align="center">管理员编号：<input type="text" required size="20" v-model="admin.adminname" placeholder="请输入编号">
+        </h2><br>
+        <h2 align="center">管理员密码：<input type="password" required size="20" v-model="admin.password" placeholder="请输入密码"
+                                        maxlength="20" value=""></h2><br>
+        <h2 align="center"><input type="button" @click="login" name="登录确认" value="立即登录"></h2><br>
+    </form>
+</div>
+</body>
+</html>
+
+
+<script>
+    var app = new Vue({
+        el: "#apDiv1",
+        data: {
+            admin: {},//用来保存用户数据
+        },
+        methods: {
+            //用户登录
+            login() {
+                console.log(this.admin);
+                //发送登录请求
+                var formData = new FormData();
+                formData.append("adminname",this.admin.adminname);
+                formData.append("password",this.admin.password);
+                axios({
+                    method:"post",
+                    url:"http://localhost:8090/adminLogin",
+                    data:formData,
+                    headers:{
+                        'content-type':'multipart/form-data'
+                    }
+                }).then(res => {
+                    console.log(res.data);
+                    if (res.data.code=='0') {
+                        alert(res.data.msg + ",点击确定进入主页！");
+                        //将登陆用户信息放入localStorage key value
+                        localStorage.setItem("admin", JSON.stringify(res.data.data.admin))
+                        location.href = "./index-0.html";
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            }
+        }
+    });
+</script>

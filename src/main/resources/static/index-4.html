@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>花旗银行后台管理系统&nbsp;手续费统计</title>
+
+<link href="CSS/HuaQicss.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+#FEIincome {
+	z-index:-1;
+	width:100%;
+	height:100px;
+	margin-top:1px;
+	position:fixed;
+	right:0px;
+	top:66px;/*固定位置,右浮动，距上66px*/
+	border-radius:3px;
+	background-color:#FFF;
+}
+input{ height:40px; border-radius:3px;}
+</style>
+</head>
+
+<body>
+<header><p id="title">&nbsp;&nbsp;&nbsp;花旗银行后台管理系统</p></header>
+<div id="lNavTop">
+    <div id="lNavCon">
+      <ul>
+        <li><a href="index-0.html" target="_self">实时监管</a></li>
+        <li><a href="index-1.html" target="_self">交易记录</a></li>
+        <li><a href="index-2.html" target="_self">调整利率</a></li>
+        <li><a href="index-3.html" target="_self">流动性接口</a></li>
+        <li><a href="index-4.html" target="_self">手续费统计</a></li>
+      </ul>
+    </div>
+</div>
+<div id="FEIincome">
+  <form id="" action="">
+  <h1>手续费收入统计&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" name="提交" value="导出数据" onClick="this" width="80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    日期选择：
+    <input type="date" name="dateselected" value="2017-08-08" width="200px">
+  </h1>
+  </form>
+</div>
+</body>
+</html>

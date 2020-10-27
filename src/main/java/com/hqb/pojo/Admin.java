@@ -14,8 +14,8 @@ public class Admin {
     private int adminid;
     private String adminname;
     private String password;
-    private int ratemin;
-    private int ratemax;
+    private double ratemin;
+    private double ratemax;
 
     public Map<String,Object> getInfo(){
         Map<String,Object> map = new HashMap<>();

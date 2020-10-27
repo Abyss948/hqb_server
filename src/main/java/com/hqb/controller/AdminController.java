@@ -27,7 +27,9 @@ public class AdminController {
         try {
             subject.login(usernamePasswordToken);
             Admin admin = adminService.getAdminByAdminName(adminname);
-            return new JsonResult<>(admin.getInfo(), "管理员登陆成功");
+            Map<String, Object> map = new HashMap<>();
+            map.put("admin",admin);
+            return new JsonResult<>(map, "管理员登陆成功");
         } catch (UnknownAccountException e) {
             return new JsonResult<>("1", "管理员用户名不存在");
         } catch (IncorrectCredentialsException e) {
@@ -38,10 +40,10 @@ public class AdminController {
     @GetMapping("/getRateMinMax")
     public JsonResult<Object> getRateMinMax(){
         Map<String, Object> map = new HashMap<>();
-        map.put("rateMinOne",adminService.getMinRateOne());
-        map.put("rateMaxOne",adminService.getMaxRateOne());
-        map.put("rateMinTwo",adminService.getMinRateTwo());
-        map.put("rateMaxTwo",adminService.getMaxRateTwo());
+        map.put("shortmin",adminService.getMinRateOne());
+        map.put("shortmax",adminService.getMaxRateOne());
+        map.put("longmin",adminService.getMinRateTwo());
+        map.put("longmax",adminService.getMaxRateTwo());
         return new JsonResult<>(map, "查询成功");
     }
 
