@@ -4,6 +4,7 @@ import com.hqb.pojo.JsonResult;
 import com.hqb.service.WebOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,21 @@ import java.util.*;
 public class WebOrderController {
     @Autowired
     WebOrderService webOrderService;
+
+
+    @PostMapping("/searchOrderByMany")
+    public JsonResult<Map<String, Object>> searchOrderByMany(@RequestParam(value="userid")String userid,
+                                                             @RequestParam(value="username")String username,
+                                                             @RequestParam(value="starttime")String starttime,
+                                                             @RequestParam(value="endtime")String endtime,
+                                                             @RequestParam(value="timelimit")String timelimit,
+                                                             @RequestParam(value="rate")String rate,
+                                                             @RequestParam(value="money")String money){
+        System.out.println("userid:"+userid+"\nusername:"+username+"\nstarttime"+starttime+"\nendtime:"+endtime+
+                "\ntimelimit:"+timelimit+"\nrate"+rate+"\nmoney:"+money);
+        return new JsonResult<>();
+    }
+
 
     @GetMapping("/getWebOrder")
     public JsonResult<Map<String, Object>> getWebOrder(@RequestParam(value="userid",required=false,defaultValue = "")int userid,
