@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     username: root
-    password: hqb123456.
-    url: jdbc:mysql://39.97.185.215:3306/hqb?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    password: 3309055200z
+    url: jdbc:mysql://81.70.199.191:3306/hqb?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
