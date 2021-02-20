@@ -1,8 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="axios.min.js"></script>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>花旗银行后台管理系统&nbsp;交易记录</title>
 
@@ -89,8 +88,9 @@
 </head>
 
 <body>
+
 <header><p id="title">&nbsp;&nbsp;&nbsp;花旗银行后台管理系统</p></header>
-<div id="#wrap">
+<div id="app">
     <div id="lNavTop">
         <div id="lNavCon">
             <ul>
@@ -129,27 +129,22 @@
                     <tr>
                         <td>
                             <h3>交易期限&nbsp
-                                <select name="consumer_tradedeadline">
-                                    <option id="banN" value="volvo">半年</option>
-                                    <option id="yiN" value="saab">一年</option>
-                                    <option id="yibanN" value="opel">一年半</option>
-                                    <option id="erN" value="audi">两年</option>
-                                    <option id="erbanN" value="audi">两年半</option>
-                                    <option id="sanN" value="audi">三年</option>
+                                <select name="public-choice" v-model="couponSelected" @change="getCouponSelected">
+                                    <option :value="coupon.id" v-for="coupon in couponList" >{{coupon.name}}</option>
                                 </select>
                             </h3>
                         </td>
                         <td>
                             <h3>交易利率&nbsp
                                 <input type="text" name="consumer_traderate" placeholder="输入利率"
-                                       v-model="condition.rate">
+                                       v-model="condition.rate">%
                             </h3>
                         </td>
                         <td>
                             <h3>交易金额&nbsp
                                 <input type="text" name="consumer_tradelimit" placeholder="输入金额"
                                        v-model="condition.money">&nbsp;&nbsp;&nbsp;
-                                <input type="submit" name="" value="筛选" @click="search" width="400px">&nbsp;&nbsp;&nbsp;
+                                <input type="button" name="" value="筛选" @click="search" width="400px">&nbsp;&nbsp;&nbsp;
                                 <!-- <input type="reset" name="tradehistory_cancel" value="取消" width="200px">-->
                             </h3>
                         </td>
@@ -202,23 +197,59 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="axios.min.js"></script>
 </body>
 </html>
 <script>
     var app = new Vue({
-        el: "#wrap",
+        el: "#app",
         data: {//数据
-            condition: {},//存放用户登录的信息
+            condition: {
+                userid:"",
+                username:"",
+                starttime:"2020-01-01",
+                endtime:"2022-12-31",
+                rate:"",
+                money:"",
+            },//
+            couponList:[
+                {
+                    id: '1',
+                    name: '半年'
+                },
+                {
+                    id: '2',
+                    name: '一年'
+                },
+                {
+                    id: '3',
+                    name: '一年半'
+                },
+                {
+                    id: '4',
+                    name: '两年'
+                },
+                {
+                    id: '5',
+                    name: '两年半'
+                },
+                {
+                    id: '6',
+                    name: '三年'
+                }
+            ],
+            couponSelected: '',
         },
         methods: {
-            setWebRate() {
+            search() {
                 var _this = this;
                 var formData = new FormData();
                 formData.append("userid", _this.condition.userid);
                 formData.append("username", _this.condition.username);
                 formData.append("starttime", _this.condition.starttime);
                 formData.append("endtime", _this.condition.endtime);
-                formData.append("timelimit", _this.condition.timelimit);
+                formData.append("timelimit", this.getCouponSelected());
                 formData.append("rate", _this.condition.rate);
                 formData.append("money", _this.condition.money);
                 axios({
@@ -229,25 +260,17 @@
                         'content-type': 'multipart/form-data'
                     }
                 }).then(res => {
-                    if (res.data.code == '0') {
-                        alert(res.data.msg);
+                    if (res.data.code === '0') {
+                        alert("查询成功");
                     } else {
-                        alert("修改失败");
+                        alert(res.data.msg);
                     }
                 });
             },
-            getRate() {
-                var _this = this;
-                axios.get("http://localhost:8090/getRateMinMax").then(res => {
-                    _this.shortmin = res.data.data.shortmin;
-                    _this.shortmax = res.data.data.shortmax;
-                    _this.longmin = res.data.data.longmin;
-                    _this.longmax = res.data.data.longmax;
-                });
-            },
-            getChart() {
-
-            },
+            getCouponSelected(){
+                //获取选中的期限
+                return this.couponSelected;
+            }
         },
         created() {//生命周期函数
             var userString = localStorage.getItem("admin");
@@ -257,6 +280,7 @@
                 alert("您尚未登录，点击确定跳转至登录页面！");
                 location.href = "./login.html";
             }
+            this.couponSelected = this.couponList[0].id;
         },
         mounted() {
         }

@@ -5,41 +5,60 @@
 <mapper namespace="com.hqb.mapper.WebOrderMapper">
 
 
-    <select id="getWebOrder" resultType="java.util.HashMap" >
- with t as (
- select nid,username needname, pid, timelimit,money, rate,nservicefee,pservicefee,starttime,endtime
- from success join user on success.needid=user.userid
- )
- select needname,user.username providename,  timelimit,money, rate,nservicefee,pservicefee,starttime,endtime
- from t join user on t.pid=user.userid
- <where>
- <if test="username!=null and username!=''">
-    and needname=#{username} or providename =#{username}
- </if>
-  <if test="userid!=null and userid!=''">
-     and  pid=${userid} or nid=${userid}
-  </if>
-  <if test="starttime!=''and starttime!=null and endtime!=null and endtime!=''">
-   and  Date_Format( starttime,'%Y-%M-%d')=#{starttime} and Date_format(endtime,'%Y-%M-%d')=#{endtime}
-  </if>
-  <if test="money!=null and money!=''">
-     and  money=${money}
-  </if>
- <if test="rate!=null and rate!=''">
-    and  rate=${rate}
- </if>
- <if test="timelimit!=null and timelimit!=''">
-   and  timelimit=${timelimit}
- </if>
- </where>
+    <select id="getWebOrder" resultType="java.util.HashMap">
+        with t as (
+        select nid,username needname, pid, timelimit,money, rate,nservicefee,pservicefee,starttime,endtime
+        from success join user on success.needid=user.userid
+        )
+        select needname,user.username providename, timelimit,money, rate,nservicefee,pservicefee,starttime,endtime
+        from t join user on t.pid=user.userid
+        <where>
+            <if test="username!=null and username!=''">
+                and needname=#{username} or providename =#{username}
+            </if>
+            <if test="userid!=null and userid!=''">
+                and pid=${userid} or nid=${userid}
+            </if>
+            <if test="starttime!=''and starttime!=null and endtime!=null and endtime!=''">
+                and Date_Format( starttime,'%Y-%M-%d')=#{starttime} and Date_format(endtime,'%Y-%M-%d')=#{endtime}
+            </if>
+            <if test="money!=null and money!=''">
+                and money=${money}
+            </if>
+            <if test="rate!=null and rate!=''">
+                and rate=${rate}
+            </if>
+            <if test="timelimit!=null and timelimit!=''">
+                and timelimit=${timelimit}
+            </if>
+        </where>
     </select>
 
+    <select id="searchOrderByManyWithUserid" parameterType="java.util.HashMap" resultType="map">
+        select * from success
+        where (nid = #{userid} or pid = #{userid}) and starttime &gt;= #{starttime}
+        and starttime &lt;= #{endtime} and timelimit = #{timelimit}
+        <if test="rate!=0">
+            and rate = #{rate}
+        </if>
+        <if test="money!=0">
+            and money = #{money}
+        </if>
+    </select>
 
+    <select id="getNameById" resultType="String" parameterType="int">
+        select username from user where userid = #{id}
+    </select>
 
-
-
-
-
-
-
+    <select id="searchOrderByMany" parameterType="java.util.HashMap" resultType="map">
+        select * from success
+        where starttime &gt;= #{starttime}
+        and starttime &lt;= #{endtime} and timelimit = #{timelimit}
+        <if test="rate!=0">
+            and rate = #{rate}
+        </if>
+        <if test="money!=0">
+            and money = #{money}
+        </if>
+    </select>
 </mapper>
