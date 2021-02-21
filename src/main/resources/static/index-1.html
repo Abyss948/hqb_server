@@ -51,7 +51,7 @@
         #formposition3 {
             width: 88%;
             left: 12%;
-            height: 18%;
+            height: 80%;
             z-index: -1;
             position: relative;
             top: 10px;
@@ -130,7 +130,7 @@
                         <td>
                             <h3>交易期限&nbsp
                                 <select name="public-choice" v-model="couponSelected" @change="getCouponSelected">
-                                    <option :value="coupon.id" v-for="coupon in couponList" >{{coupon.name}}</option>
+                                    <option :value="coupon.id" v-for="coupon in couponList">{{coupon.name}}</option>
                                 </select>
                             </h3>
                         </td>
@@ -163,35 +163,22 @@
                 <tr>
                     <td width="11%"><h3>贷款人</h3></td>
                     <td width="11%"><h3>借款人</h3></td>
-                    <td width="11%"><h3>&nbsp;</h3></td>
-                    <td width="11%"><h3>&nbsp;</h3></td>
                     <td width="11%"><h3>期限</h3></td>
                     <td width="11%"><h3>交易金额</h3></td>
                     <td width="11%"><h3>交易利率</h3></td>
-                    <td width="11%"><h3>手续费</h3></td>
+                    <td width="11%"><h3>贷款手续费</h3></td>
+                    <td width="11%"><h3>借款手续费</h3></td>
+                    <td width="22%"><h3>交易时间</h3></td>
                 </tr>
-                <tr>
-                    <td><a href="customerDATA.html" title="查看客户详细信息" target="_new"><h2><font color="2F7CBA">张XX</font>
-                    </h2>
-                    </a></td>
-                    <td><a href="customerDATA.html" title="查看客户详细信息" target="_new"><h2><font color="FF2A2A">王XX</font>
-                    </h2>
-                    </a></td>
-                    <td><h2>&nbsp;</h2></td>
-                    <td><h2>&nbsp;</h2></td>
-                    <td><h2>3年</h2></td>
-                    <td><h2>XXXXX元</h2></td>
-                    <td><h2>2.3%</h2></td>
-                    <td><h2>XX元</h2></td>
-                </tr>
-                <tr>
-                    <td><h3>&nbsp;</h3></td>
-                    <td><h3>&nbsp;</h3></td>
-                    <td><h3>&nbsp;</h3></td>
-                    <td><h3>&nbsp;</h3></td>
-                    <td><h3>交易时间</h3></td>
-                    <td colspan="2"><h3>20XX/X/X—20XX/X/X</h3></td>
-                    <td><h3>&nbsp;</h3></td>
+                <tr v-for="emp in emps" :key="emp.successid">
+                    <td><a :href="'/customerDATA.html?id='+emp.pid"><h2><font color="2F7CBA">{{emp.pName}}</font></h2></a></td>
+                    <td><a :href="'/customerDATA.html?id='+emp.nid"><h2><font color="FF2A2A">{{emp.nName}}</font></h2></a></td>
+                    <td><h2>{{emp.timelimit}}年</h2></td>
+                    <td><h2>{{emp.money}}元</h2></td>
+                    <td><h2>{{emp.rate}}%</h2></td>
+                    <td><h2>{{emp.pservicefee}}元</h2></td>
+                    <td><h2>{{emp.nservicefee}}元</h2></td>
+                    <td><h3>{{emp.starttime}}~{{emp.endtime}}</h3></td>
                 </tr>
             </table>
         </div>
@@ -206,14 +193,14 @@
         el: "#app",
         data: {//数据
             condition: {
-                userid:"",
-                username:"",
-                starttime:"2020-01-01",
-                endtime:"2022-12-31",
-                rate:"",
-                money:"",
+                userid: "",
+                username: "",
+                starttime: "2020-01-01",
+                endtime: "2022-12-31",
+                rate: "",
+                money: "",
             },//
-            couponList:[
+            couponList: [
                 {
                     id: '1',
                     name: '半年'
@@ -240,6 +227,22 @@
                 }
             ],
             couponSelected: '',
+            emps: [{
+                successid: 0,
+                pid:0,
+                nid:0,
+                pName: "张先生",
+                nName: "王先生",
+                timelimit: "x",
+                money: "xxx",
+                rate: "x.x",
+                pservicefee: "--",
+                nservicefee:"--",
+                starttime: "2020-01-01",
+                endtime: "2023-01-01"
+            },
+
+            ]
         },
         methods: {
             search() {
@@ -262,14 +265,19 @@
                 }).then(res => {
                     if (res.data.code === '0') {
                         alert("查询成功");
+                        _this.emps=res.data.data.resultList;
+                        console.log(res.data.data);
                     } else {
                         alert(res.data.msg);
                     }
                 });
             },
-            getCouponSelected(){
+            getCouponSelected() {
                 //获取选中的期限
                 return this.couponSelected;
+            },
+            go(){
+                this.$router.push('/customerDATA.html')
             }
         },
         created() {//生命周期函数
