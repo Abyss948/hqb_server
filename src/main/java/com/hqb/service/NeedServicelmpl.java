@@ -160,15 +160,15 @@ public class NeedServicelmpl implements NeedService {
         needMapper.addSuccess(map);
 
         Map<String,Object> map1 = new HashMap<>();
-        map1.put("nowmoney",successMoney+need.getNowmoney());
+        map1.put("nowmoney",successMoney+need.getNowmoney());//新的已借到金额 = 成交金额+已借到金额
         map1.put("needid",need.getNeedid());
 
         Map<String,Object> map2 = new HashMap<>();
-        map2.put("nowmoney",successMoney+provide.getNowmoney());
+        map2.put("nowmoney",successMoney+provide.getNowmoney());//新的已借出金额 = 成交金额+已借出金额
         map2.put("provideid",provide.getProvideid());
 
-        needMapper.updateNowMoney(map1);
-        provideMapper.updateNowMoney(map2);
+        needMapper.updateNowMoney(map1);//更新已借到金额
+        provideMapper.updateNowMoney(map2);//更新已借出金额
         if(successMoney+need.getNowmoney()==need.getGoalmoney()){
             needMapper.updateNeed(need.getNeedid());
         }
