@@ -6,6 +6,7 @@ import com.hqb.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +42,14 @@ public class MyServiceImpl implements MyService {
 
         myMapper.addNewTransfer(map);
 
-        setBalance(loseid, loseUser.getBalance() - money);
-        setBalance(getid, getUser.getBalance() + money);
+        BigDecimal b1 = new BigDecimal(loseUser.getBalance() - money);
+        double losemoney = b1.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal b2 = new BigDecimal(getUser.getBalance() + money);
+        double getmoney = b2.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+
+
+        setBalance(loseid, losemoney);
+        setBalance(getid, getmoney);
 
         return new JsonResult<>("0", "转账成功！");
     }
