@@ -11,6 +11,18 @@
   where userid=#{userid}
     </select>
 
+    <select id="getUserByUerid" parameterType="int" resultType="User">
+        select * from user where userid = #{userid}
+    </select>
+    
+    <insert id="addNewTransfer" parameterType="java.util.HashMap" keyColumn="transferid" useGeneratedKeys="true">
+        insert into transfertable (losename,loseid,getname,getid,transfermoney,transfertime)
+        values (#{losename},#{loseid},#{getname},#{getid},#{transfermoney},#{transfertime})
+    </insert>
+
+    <update id="setBalance" parameterType="java.util.HashMap">
+        update user set balance = #{balance} where userid = #{userid}
+    </update>
 
 
 

@@ -1,6 +1,7 @@
 package com.hqb.controller;
 
 import com.hqb.pojo.JsonResult;
+import com.hqb.pojo.User;
 import com.hqb.service.AccountService;
 import com.hqb.service.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,29 @@ public class MyController {
         return new JsonResult<>(map, "success");
     }
 
-    @PostMapping("/transferMoney")
-    public JsonResult<Map<String, Object>> transferMoney(@RequestParam("code") String code) {
-        Map<String, Object> map = new HashMap<>();
-        code = "=" + code;
-        System.out.println(code);
-        map.put("code", code);
-        return new JsonResult<>(map);
+    @PostMapping("/transferAction")
+    public JsonResult<Map<String, Object>> transferAction(@RequestParam("myid") String myid,
+                                                          @RequestParam("code") String code,
+                                                          @RequestParam("transferMoney") String transferMoney) {
+        String codeOfLast = code.substring(20);
+        int loseid = Integer.parseInt(myid);
+        int getid = Integer.parseInt(codeOfLast);
+        if (loseid <= 0 || getid <= 0) {
+            return new JsonResult<>("1", "双方信息错误！");
+        }
+
+        if(getid==loseid){
+            return new JsonResult<>("3", "不可以自己给自己转账！");
+        }
+
+        double money = 0;
+
+        try {
+            money = Double.parseDouble(transferMoney);
+        } catch (Exception e) {
+            return new JsonResult<>("2", "输入金额不正确！");
+        }
+
+        return myService.transferMoney(loseid,getid,money);
     }
 }
