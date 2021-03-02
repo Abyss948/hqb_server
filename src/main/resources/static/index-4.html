@@ -1,47 +1,193 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>花旗银行后台管理系统&nbsp;手续费统计</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>花旗银行后台管理系统&nbsp;手续费统计</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="axios.min.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <link href="CSS/HuaQicss.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        #FEIincome {
+            z-index: -1;
+            width: 100%;
+            height: 100px;
+            margin-top: 1px;
+            position: fixed;
+            right: 0px;
+            top: 66px; /*固定位置,右浮动，距上66px*/
+            border-radius: 3px;
+            background-color: #FFF;
+        }
 
-<link href="CSS/HuaQicss.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-#FEIincome {
-	z-index:-1;
-	width:100%;
-	height:100px;
-	margin-top:1px;
-	position:fixed;
-	right:0px;
-	top:66px;/*固定位置,右浮动，距上66px*/
-	border-radius:3px;
-	background-color:#FFF;
-}
-input{ height:40px; border-radius:3px;}
-</style>
+        input {
+            height: 40px;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 
 <body>
-<header><p id="title">&nbsp;&nbsp;&nbsp;花旗银行后台管理系统</p></header>
-<div id="lNavTop">
-    <div id="lNavCon">
-      <ul>
-        <li><a href="index-0.html" target="_self">实时监管</a></li>
-        <li><a href="index-1.html" target="_self">交易记录</a></li>
-        <li><a href="index-2.html" target="_self">调整利率</a></li>
-        <li><a href="index-3.html" target="_self">流动性接口</a></li>
-        <li><a href="index-4.html" target="_self">手续费统计</a></li>
-      </ul>
+<div id="app">
+    <header><p id="title">&nbsp;&nbsp;&nbsp;花旗银行后台管理系统</p></header>
+    <div id="lNavTop">
+        <div id="lNavCon">
+            <ul>
+                <li><a href="index-0.html" target="_self">实时监管</a></li>
+                <li><a href="index-1.html" target="_self">交易记录</a></li>
+                <li><a href="index-2.html" target="_self">调整利率</a></li>
+                <li><a href="index-3.html" target="_self">流动性接口</a></li>
+                <li><a href="index-4.html" target="_self">手续费统计</a></li>
+            </ul>
+        </div>
     </div>
-</div>
-<div id="FEIincome">
-  <form id="" action="">
-  <h1>手续费收入统计&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" name="提交" value="导出数据" onClick="this" width="80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    日期选择：
-    <input type="date" name="dateselected" value="2017-08-08" width="200px">
-  </h1>
-  </form>
+    <div id="FEIincome">
+        <form id="" action="">
+            <h1>手续费收入统计&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" name="提交" value="导出数据" onClick="this" width="80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                日期选择：
+                <input type="date" name="dateselected" value="2021-03-05" width="200px">
+            </h1>
+        </form>
+
+        <div id="chartLine1" style="width: 80%;height: 70vh;margin: 0 auto;margin-right: 60px"></div>
+
+    </div>
 </div>
 </body>
 </html>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {//数据
+            admin: {},//存放用户登录的信息
+            shortmin: 0,
+            shortmax: 0,
+            longmin: 0,
+            longmax: 0,
+            arraylong: [],
+            arrayshort: []
+        },
+        methods: {
+            setWebRate() {
+                var _this = this;
+                var formData = new FormData();
+                formData.append("shortmin", _this.shortmin);
+                formData.append("shortmax", _this.shortmax);
+                formData.append("longmin", _this.longmin);
+                formData.append("longmax", _this.longmax);
+                axios({
+                    method: "post",
+                    url: "http://localhost:8090/setWebRate",
+                    data: formData,
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }).then(res => {
+                    if (res.data.code == '0') {
+                        alert(res.data.msg);
+                    } else {
+                        alert("修改失败");
+                    }
+                });
+            },
+            getRate() {
+                var _this = this;
+                axios.get("http://localhost:8090/getRateMinMax").then(res => {
+                    _this.shortmin = res.data.data.shortmin;
+                    _this.shortmax = res.data.data.shortmax;
+                    _this.longmin = res.data.data.longmin;
+                    _this.longmax = res.data.data.longmax;
+                });
+            },
+            getChart() {
+
+            },
+        },
+        created() {//生命周期函数
+            var userString = localStorage.getItem("admin");
+            if (userString) {
+                this.admin = JSON.parse(userString);
+            } else {
+                alert("您尚未登录，点击确定跳转至登录页面！");
+                location.href = "./login.html";
+            }
+            //查询当前汇率
+            this.getRate();
+            this.getChart();
+        },
+
+        mounted() {
+            this.chartLine1 = echarts.init(document.getElementById('chartLine1'));
+            // 指定图表的配置项和数据
+            var _this = this;
+            var option1 = {
+                tooltip: {              //设置tip提示
+                    trigger: 'axis'
+                },
+                legend: {               //设置区分（哪条线属于什么）
+                    data: ['手续费']
+                },
+                color: ['#8AE09F'],       //设置区分（每条线是什么颜色，和 legend 一一对应）
+                xAxis: {                //设置x轴
+                    type: 'category',
+                    boundaryGap: false,     //坐标轴两边不留白
+                    data: [1,2,3,4,5,6,7,8,9,10,11,12],
+                    name: '月份',           //X轴 name
+                    nameTextStyle: {        //坐标轴名称的文字样式
+                        color: '#FA6F53',
+                        fontSize: 20,
+                        padding: [0, 0, 0, 20]
+                    },
+                    axisLine: {             //坐标轴轴线相关设置。
+                        lineStyle: {
+                            color: '#FA6F53',
+                        }
+                    }
+                },
+                yAxis: {
+                    name: '手续费（元）',
+                    nameTextStyle: {
+                        color: '#FA6F53',
+                        fontSize: 20,
+                        padding: [0, 0, 10, 0]
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#FA6F53',
+                        }
+                    },
+                    type: 'value'
+                },
+                series: [
+                    {
+                        type: 'line',
+                    },
+                ],
+                backgroundColor: '#ffffff'
+            };
+
+            axios.get("http://localhost:8090/getWebSerFeeChart").then(res => {
+                console.log(res.data.data)
+                this.chartLine1.setOption({ //加载数据图表
+                    series: [
+                        {
+                            name: '手续费',
+                            data: res.data.data.arrayFee,
+                            type: 'line',               // 类型为折线图
+                            lineStyle: {                // 线条样式 => 必须使用normal属性
+                                normal: {
+                                    color: '#8AE09F',
+                                }
+                            },
+                        }
+                    ]
+                });
+            });
+
+            // 使用刚指定的配置项和数据显示图表。
+            this.chartLine1.setOption(option1);
+            this.chartLine2.setOption(option2);
+        },
+    });
+</script>
