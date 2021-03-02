@@ -33,16 +33,29 @@ public class WebRateController {
     @GetMapping("/getWebRate")
     public JsonResult<Object> getWebRate() {
         ArrayList<Double> arraylong = new ArrayList<>();
+        double minrate = 10,maxrate = 0;
         for(int i=0;i<=14;i++){
-            arraylong.add(i,webRateService.getWebLongRate(15-i));
+            Double temp = webRateService.getWebLongRate(15-i);
+            if(temp!=null){
+                maxrate = Math.max(maxrate,temp);
+                minrate = Math.min(minrate,temp);
+            }
+            arraylong.add(i,temp);
         }
         ArrayList<Double> arrayshort = new ArrayList<>();
         for(int i=0;i<=14;i++){
-            arrayshort.add(i,webRateService.getWebShortRate(15-i));
+            Double temp = webRateService.getWebShortRate(15-i);
+            if(temp!=null){
+                maxrate = Math.max(maxrate,temp);
+                minrate = Math.min(minrate,temp);
+            }
+            arrayshort.add(i,temp);
         }
         Map<String, Object> map = new HashMap<>();
         map.put("arraylong", arraylong);
         map.put("arrayshort", arrayshort);
+        map.put("maxrate",maxrate);
+        map.put("minrate",minrate);
         return new JsonResult<>(map);
 
     }
