@@ -16,8 +16,8 @@ public class TempController {
     public JsonResult<Object> temp1() throws Exception {
 
         Map<String,Object> map = new HashMap<>();
-        BigInteger id =new BigInteger("99");
-        BigInteger balance =new BigInteger("299");
+        BigInteger id =new BigInteger("100");
+        BigInteger balance =new BigInteger("2999");
         BlockChainTest.loadContract(id,balance);
         return new JsonResult<>(map,"success");
     }
@@ -26,7 +26,7 @@ public class TempController {
     public JsonResult<Object> temp2() throws Exception {
 
         Map<String,Object> map = new HashMap<>();
-        BigInteger id =new BigInteger("99");
+        BigInteger id =new BigInteger("100");
         RemoteFunctionCall<BigInteger> bigIntegerRemoteFunctionCall = BlockChainTest.getinfoContract(id);
 
         map.put("this", bigIntegerRemoteFunctionCall.send());

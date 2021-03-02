@@ -19,7 +19,7 @@ public class BlockChainTest {
         //建立私链连接，infura节点
         Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/9e238311088f45db8823a1e563af522a"));
         //加载钱包账户,需要从geth的data文件中拷贝出来keysotre文件夹里的内容
-        Credentials credentials = WalletUtils.loadCredentials("123456", "src/main/resources/templates/UTC--2021-02-27T14-58-23.947000000Z--b061fe6375ccac3c899f177391ac884113358c5e.json");
+        Credentials credentials = WalletUtils.loadCredentials("123456", "src/main/resources/templates/UTC--2021-03-01T12-50-59.510320200Z--5440d6424be0cfa01edd3f255ac49f5dfaecc45b.json");
         //加载合约
         String contractAddr = "0x633809f97ecB9A1f7b53D87eEE9E5Ac0f4F10823";//合约地址
         AWMain contract = AWMain.load(contractAddr, web3j, credentials, BigInteger.valueOf(3000000), BigInteger.valueOf(3000000));
@@ -33,7 +33,7 @@ public class BlockChainTest {
         //建立私链连接，infura节点
         Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/9e238311088f45db8823a1e563af522a"));
         //加载钱包账户,需要拷贝出来walllet文件夹里的内容
-        Credentials credentials = WalletUtils.loadCredentials("123456", "src/main/resources/templates/UTC--2021-02-27T14-58-23.947000000Z--b061fe6375ccac3c899f177391ac884113358c5e.json");
+        Credentials credentials = WalletUtils.loadCredentials("123456", "src/main/resources/templates/UTC--2021-03-01T12-50-59.510320200Z--5440d6424be0cfa01edd3f255ac49f5dfaecc45b.json");
         //加载合约
         String contractAddr = "0x633809f97ecB9A1f7b53D87eEE9E5Ac0f4F10823";//合约地址
         AWMain contract = AWMain.load(contractAddr, web3j, credentials, BigInteger.valueOf(3000000), BigInteger.valueOf(3000000));
