@@ -14,10 +14,11 @@
             width: 40%;
             height: 48%;
             z-index: 2;
-            top: 70%;
+            top: 80%;
             left: 35%;
             box-shadow: 12px 12px 24px 12px #99A;
             border-radius: 24px;
+            background-color: #CCC;
         }
 
         #利率 {
@@ -49,13 +50,15 @@
     </div>
     <br>
     <br>
-    <div id="chartLineBox" style="width: 80%;height: 70vh;margin: 0 auto"></div>
+    <br>
+    <div id="chartLine1" style="width: 80%;height: 70vh;margin: 0 auto;margin-right: 60px"></div>
+
+    <br>
+    <br>
     <br>
     <div id="RATE">
-
         <div>
             <form id="利率" action="">
-                <br>
                 <h1 align="center">调整利率</h1><br>
                 <p align="center" style="size:50px;">
                     短期借贷利率&nbsp;&nbsp;<input type="text" name="longmin1" v-model="shortmin" placeholder="请输入最低利率">%
@@ -141,16 +144,15 @@
         },
 
         mounted() {
-            this.chartLine = echarts.init(document.getElementById('chartLineBox'));
+            this.chartLine1 = echarts.init(document.getElementById('chartLine1'));
             // 指定图表的配置项和数据
             var _this = this;
-            var option = {
+            var option1 = {
                 tooltip: {              //设置tip提示
                     trigger: 'axis'
                 },
-
                 legend: {               //设置区分（哪条线属于什么）
-                    data: ['短期', '长期']
+                    data: ['短期(<1年)', '长期(≥1年)']
                 },
                 color: ['#8AE09F', '#FA6F53'],       //设置区分（每条线是什么颜色，和 legend 一一对应）
                 xAxis: {                //设置x轴
@@ -160,7 +162,7 @@
                     name: 'n天前',           //X轴 name
                     nameTextStyle: {        //坐标轴名称的文字样式
                         color: '#FA6F53',
-                        fontSize: 16,
+                        fontSize: 20,
                         padding: [0, 0, 0, 20]
                     },
                     axisLine: {             //坐标轴轴线相关设置。
@@ -173,7 +175,7 @@
                     name: '利率（%）',
                     nameTextStyle: {
                         color: '#FA6F53',
-                        fontSize: 16,
+                        fontSize: 20,
                         padding: [0, 0, 10, 0]
                     },
                     axisLine: {
@@ -187,14 +189,16 @@
                     {
                         type: 'line',
                     },
-                ]
+                ],
+                backgroundColor: '#ffffff'
             };
+
             axios.get("http://localhost:8090/getWebRate").then(res => {
                 console.log(res.data.data)
-                this.chartLine.setOption({ //加载数据图表
+                this.chartLine1.setOption({ //加载数据图表
                     series: [
                         {
-                            name: '短期',
+                            name: '短期(<1年)',
                             data: res.data.data.arrayshort,
                             type: 'line',               // 类型为折线图
                             lineStyle: {                // 线条样式 => 必须使用normal属性
@@ -204,7 +208,7 @@
                             },
                         },
                         {
-                            name: '长期',
+                            name: '长期(≥1年)',
                             data: res.data.data.arraylong,
                             type: 'line',
                             lineStyle: {
@@ -216,8 +220,10 @@
                     ]
                 });
             });
+
             // 使用刚指定的配置项和数据显示图表。
-            this.chartLine.setOption(option);
+            this.chartLine1.setOption(option1);
+            this.chartLine2.setOption(option2);
         },
     });
 </script>

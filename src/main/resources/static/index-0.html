@@ -49,7 +49,10 @@
     </div>
     <br>
     <br>
-    <div id="chartLineBox" style="width: 80%;height: 70vh;margin: 0 auto"></div>
+    <br>
+    <div id="chartLine1" style="width: 80%;height: 70vh;margin: 0 auto;margin-right: 60px"></div>
+    <br>
+    <div id="chartLine2" style="width: 80%;height: 70vh;margin: 0 auto;margin-right: 60px"></div>
     <br>
 
 </div>
@@ -117,16 +120,16 @@
         },
 
         mounted() {
-            this.chartLine = echarts.init(document.getElementById('chartLineBox'));
+            this.chartLine1 = echarts.init(document.getElementById('chartLine1'));
+            this.chartLine2 = echarts.init(document.getElementById('chartLine2'));
             // 指定图表的配置项和数据
             var _this = this;
-            var option = {
+            var option1 = {
                 tooltip: {              //设置tip提示
                     trigger: 'axis'
                 },
-
                 legend: {               //设置区分（哪条线属于什么）
-                    data: ['短期', '长期']
+                    data: ['短期(<1年)', '长期(≥1年)']
                 },
                 color: ['#8AE09F', '#FA6F53'],       //设置区分（每条线是什么颜色，和 legend 一一对应）
                 xAxis: {                //设置x轴
@@ -136,7 +139,7 @@
                     name: 'n天前',           //X轴 name
                     nameTextStyle: {        //坐标轴名称的文字样式
                         color: '#FA6F53',
-                        fontSize: 16,
+                        fontSize: 20,
                         padding: [0, 0, 0, 20]
                     },
                     axisLine: {             //坐标轴轴线相关设置。
@@ -149,7 +152,7 @@
                     name: '利率（%）',
                     nameTextStyle: {
                         color: '#FA6F53',
-                        fontSize: 16,
+                        fontSize: 20,
                         padding: [0, 0, 10, 0]
                     },
                     axisLine: {
@@ -163,14 +166,60 @@
                     {
                         type: 'line',
                     },
-                ]
+                ],
+                backgroundColor:'#ffffff'
+            };
+            var option2 = {
+                tooltip: {              //设置tip提示
+                    trigger: 'axis'
+                },
+                legend: {               //设置区分（哪条线属于什么）
+                    data: ['借出', '贷进','成交']
+                },
+                color: ['#8AE09F', '#FA6F53','#1f1ffa'],       //设置区分（每条线是什么颜色，和 legend 一一对应）
+                xAxis: {                //设置x轴
+                    type: 'category',
+                    boundaryGap: false,     //坐标轴两边不留白
+                    data: ['16','15', '14', '13', '12', '11', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1'],
+                    name: 'n天前',           //X轴 name
+                    nameTextStyle: {        //坐标轴名称的文字样式
+                        color: '#FA6F53',
+                        fontSize: 20,
+                        padding: [0, 0, 0, 20]
+                    },
+                    axisLine: {             //坐标轴轴线相关设置。
+                        lineStyle: {
+                            color: '#FA6F53',
+                        }
+                    }
+                },
+                yAxis: {
+                    name: '成交额（万元）',
+                    nameTextStyle: {
+                        color: '#FA6F53',
+                        fontSize: 20,
+                        padding: [0, 0, 10, 0]
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#FA6F53',
+                        }
+                    },
+                    type: 'value'
+                },
+                series: [
+                    {
+                        type: 'line',
+                    },
+                ],
+                backgroundColor:'#ffffff'
             };
             axios.get("http://localhost:8090/getWebRate").then(res => {
                 console.log(res.data.data)
-                this.chartLine.setOption({ //加载数据图表
+                this.chartLine1.setOption({ //加载数据图表
                     series: [
                         {
-                            name: '短期',
+                            name: '短期(<1年)',
                             data: res.data.data.arrayshort,
                             type: 'line',               // 类型为折线图
                             lineStyle: {                // 线条样式 => 必须使用normal属性
@@ -180,7 +229,7 @@
                             },
                         },
                         {
-                            name: '长期',
+                            name: '长期(≥1年)',
                             data: res.data.data.arraylong,
                             type: 'line',
                             lineStyle: {
@@ -192,8 +241,46 @@
                     ]
                 });
             });
+            axios.get("http://localhost:8090/getWebSDChart").then(res => {
+                console.log(res.data.data)
+                this.chartLine2.setOption({ //加载数据图表
+                    series: [
+                        {
+                            name: '借出',
+                            data: res.data.data.provide.provideY,
+                            type: 'line',               // 类型为折线图
+                            lineStyle: {                // 线条样式 => 必须使用normal属性
+                                normal: {
+                                    color: '#8AE09F',
+                                }
+                            },
+                        },
+                        {
+                            name: '贷进',
+                            data: res.data.data.need.needY,
+                            type: 'line',
+                            lineStyle: {
+                                normal: {
+                                    color: '#FA6F53',
+                                }
+                            },
+                        },
+                        {
+                            name: '成交',
+                            data: res.data.data.success.successY,
+                            type: 'line',
+                            lineStyle: {
+                                normal: {
+                                    color: '#1f1ffa',
+                                }
+                            },
+                        }
+                    ]
+                });
+            });
             // 使用刚指定的配置项和数据显示图表。
-            this.chartLine.setOption(option);
+            this.chartLine1.setOption(option1);
+            this.chartLine2.setOption(option2);
         },
     });
 </script>

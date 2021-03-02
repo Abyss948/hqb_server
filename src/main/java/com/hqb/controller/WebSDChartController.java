@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hqb.predict.MyLineRegression;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,36 +19,34 @@ public class WebSDChartController {
     WebSDChartService webSDChartService;
 
     @GetMapping("getWebSDChart")
-    public JsonResult<Object> getWebSDChart()
-    {
+    public JsonResult<Object> getWebSDChart() {
 
-            double[] X = new double[15];
-            double[] Y = new double[15];
+        double[] X = new double[15];
+        double[] Y = new double[15];
 
-            for(int i = 0; i < 15; i++)
-            {
-                X[i] = i+1;
-                if(webSDChartService.getWebProvideChart(15-i)!=null)
-                Y[i] = webSDChartService.getWebProvideChart(15-i);
-                else
-                    Y[i]=0.0;
-            }
-            Map<String,Double> m = new HashMap<>(new MyLineRegression().lineRegression(X, Y));
-           double a = m.get("a");
-           double b = m.get("b");
-
-            double t=a*16+b;
-        ArrayList<Integer> provideDay= new ArrayList<>();
-        ArrayList<Double> provideY = new ArrayList<>();
-        Map<String ,Object> map_p = new HashMap<>();
         for (int i = 0; i < 15; i++) {
-            provideDay.add(i,i+1);
-            provideY.add(i,webSDChartService.getWebProvideChart(15-i));
+            X[i] = i + 1;
+            if (webSDChartService.getWebProvideChart(15 - i) != null)
+                Y[i] = webSDChartService.getWebProvideChart(15 - i);
+            else
+                Y[i] = 0.0;
         }
-        provideDay.add(15,16);
-        provideY.add(15,t);
-        map_p.put("provideDay",provideDay);
-        map_p.put("provideY",provideY);
+        Map<String, Double> m = new HashMap<>(new MyLineRegression().lineRegression(X, Y));
+        double a = m.get("a");
+        double b = m.get("b");
+
+        double t = a * 16 + b;
+        ArrayList<Integer> provideDay = new ArrayList<>();
+        ArrayList<Double> provideY = new ArrayList<>();
+        Map<String, Object> map_p = new HashMap<>();
+        for (int i = 0; i < 15; i++) {
+            provideDay.add(i, i + 1);
+            provideY.add(i, fliter(webSDChartService.getWebProvideChart(15 - i)));
+        }
+        provideDay.add(15, 16);
+        provideY.add(15, fliter(t));
+        map_p.put("provideDay", provideDay);
+        map_p.put("provideY", provideY);
 //        map_p.put("1",webSDChartService.getWebProvideChart(15));
 //        map_p.put("2",webSDChartService.getWebProvideChart(14));
 //        map_p.put("3",webSDChartService.getWebProvideChart(13));
@@ -64,24 +63,23 @@ public class WebSDChartController {
 //        map_p.put("14",webSDChartService.getWebProvideChart(2));
 //        map_p.put("15",webSDChartService.getWebProvideChart(1));
 //        map_p.put("predict",t);
-        for(int i = 0; i < 15; i++)
-        {
-            X[i] = i+1;
-            if(webSDChartService.getWebNeedChart(15-i)!=null)
-            Y[i] = webSDChartService.getWebNeedChart(15-i);
-            else Y[i]=0;
+        for (int i = 0; i < 15; i++) {
+            X[i] = i + 1;
+            if (webSDChartService.getWebNeedChart(15 - i) != null)
+                Y[i] = webSDChartService.getWebNeedChart(15 - i);
+            else Y[i] = 0;
         }
-     m = new HashMap(new MyLineRegression().lineRegression(X, Y));
-         a = m.get("a");
-       b = m.get("b");
+        m = new HashMap(new MyLineRegression().lineRegression(X, Y));
+        a = m.get("a");
+        b = m.get("b");
 
-      t=a*16+b;
+        t = a * 16 + b;
         ArrayList<Integer> needDay = new ArrayList<>();
         ArrayList<Double> needY = new ArrayList<>();
-        Map<String ,Object> map_n = new HashMap<>();
+        Map<String, Object> map_n = new HashMap<>();
         for (int i = 0; i < 15; i++) {
-            needDay.add(i,i+1);
-            needY.add(i,webSDChartService.getWebNeedChart(15-i));
+            needDay.add(i, i + 1);
+            needY.add(i, fliter(webSDChartService.getWebNeedChart(15 - i)));
         }
 //        map_n.put("1",webSDChartService.getWebNeedChart(15));
 //        map_n.put("2",webSDChartService.getWebNeedChart(14));
@@ -99,33 +97,32 @@ public class WebSDChartController {
 //        map_n.put("14",webSDChartService.getWebNeedChart(2));
 //        map_n.put("15",webSDChartService.getWebNeedChart(1));
 //        map_n.put("predict",t);
-        for(int i = 0; i < 15; i++)
-        {
-            X[i] = i+1;
-            if(webSDChartService.getWebSuccessChart(15-i)!=null)
-            Y[i] = webSDChartService.getWebSuccessChart(15-i);
-            else Y[i]=0;
+        for (int i = 0; i < 15; i++) {
+            X[i] = i + 1;
+            if (webSDChartService.getWebSuccessChart(15 - i) != null)
+                Y[i] = webSDChartService.getWebSuccessChart(15 - i);
+            else Y[i] = 0;
         }
-        needDay.add(15,16);
-       needY.add(15,t);
-        map_n.put("needDay",needDay);
-        map_n.put("needY",needY);
+        needDay.add(15, 16);
+        needY.add(15, fliter(t));
+        map_n.put("needDay", needDay);
+        map_n.put("needY", needY);
         m = new HashMap(new MyLineRegression().lineRegression(X, Y));
         a = m.get("a");
         b = m.get("b");
 
-        t=a*16+b;
-        Map<String ,Object> map_s = new HashMap<>();
+        t = a * 16 + b;
+        Map<String, Object> map_s = new HashMap<>();
         ArrayList<Integer> successDay = new ArrayList<>();
-        ArrayList<Double>   successY = new ArrayList<>();
+        ArrayList<Double> successY = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            successDay.add(i,i+1);
-            successY.add(i,webSDChartService.getWebSuccessChart(15-i));
+            successDay.add(i, i + 1);
+            successY.add(i, fliter(webSDChartService.getWebSuccessChart(15 - i)));
         }
-        successDay.add(15,16);
-        successY.add(15,t);
-        map_s.put("successDay",successDay);
-        map_s.put("successY",successY);
+        successDay.add(15, 16);
+        successY.add(15, fliter(t));
+        map_s.put("successDay", successDay);
+        map_s.put("successY", successY);
 //        map_s.put("1",webSDChartService.getWebSuccessChart(15));
 //        map_s.put("2",webSDChartService.getWebSuccessChart(14));
 //        map_s.put("3",webSDChartService.getWebSuccessChart(13));
@@ -142,10 +139,18 @@ public class WebSDChartController {
 //        map_s.put("14",webSDChartService.getWebSuccessChart(2));
 //        map_s.put("15",webSDChartService.getWebSuccessChart(1));
 //        map_s.put("predict",t);
-        Map<String ,Object> map = new HashMap<>();
-        map.put("provide",map_p);
-        map.put("need",map_n);
-        map.put("success",map_s);
+        Map<String, Object> map = new HashMap<>();
+        map.put("provide", map_p);
+        map.put("need", map_n);
+        map.put("success", map_s);
         return new JsonResult<>(map);
+    }
+
+    public Double fliter(Double d) {
+        if (d == null) {
+            return d;
+        } else {
+            return new BigDecimal(d / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        }
     }
 }
