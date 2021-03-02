@@ -174,7 +174,7 @@
                     trigger: 'axis'
                 },
                 legend: {               //设置区分（哪条线属于什么）
-                    data: ['借出', '贷进','成交']
+                    data: ['贷出', '借进','成交']
                 },
                 color: ['#8AE09F', '#FA6F53','#1f1ffa'],       //设置区分（每条线是什么颜色，和 legend 一一对应）
                 xAxis: {                //设置x轴
@@ -246,7 +246,7 @@
                 this.chartLine2.setOption({ //加载数据图表
                     series: [
                         {
-                            name: '借出',
+                            name: '贷出',
                             data: res.data.data.provide.provideY,
                             type: 'line',               // 类型为折线图
                             lineStyle: {                // 线条样式 => 必须使用normal属性
@@ -256,7 +256,7 @@
                             },
                         },
                         {
-                            name: '贷进',
+                            name: '借进',
                             data: res.data.data.need.needY,
                             type: 'line',
                             lineStyle: {
