@@ -32,4 +32,22 @@
     <select id="getSuccessRecord" resultType="java.util.HashMap">
         select successid,nid,pid,rate,timelimit,starttime,endtime,money,servicefee,status from success order by starttime
     </select>
+
+    <select id="getSumNeed" resultType="Double">
+         SELECT sum(goalmoney)-sum(nowmoney) FROM need
+         WHERE DATEDIFF(starttime,NOW())=0 and status=0
+    </select>
+
+    <select id="getSumProvide" resultType="Double">
+         SELECT sum(goalmoney)-sum(nowmoney) FROM provide
+         WHERE DATEDIFF(starttime,NOW())=0 and status=0
+    </select>
+
+    <select id="getAvgRateNeed" resultType="Double">
+        select avg(rate) from need where DATEDIFF(starttime,NOW())=0 and status=0
+    </select>
+
+    <select id="getAvgRateProvide" resultType="Double">
+        select avg(rate) from provide where DATEDIFF(starttime,NOW())=0 and status=0
+    </select>
 </mapper>

@@ -16,5 +16,11 @@ public interface AdminService {
     void updateRateOneRapid(double rateMin, double rateMax);
     List<Map<String,Object>> getSuccessRecord();
 
+    Double getSumNeed();
+    Double getSumProvide();
 
+    boolean isOutRate(Double sumNeed, Double sumProvide, double v);
+
+    void needGTprovide(Double sumNeed, Double sumProvide);
+    void provideGTneed(Double sumNeed, Double sumProvide);
 }

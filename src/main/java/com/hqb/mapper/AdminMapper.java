@@ -20,5 +20,10 @@ public interface AdminMapper {
     void updateRateOneRapid(double rateMin, double rateMax);
     List<Map<String, Object>> getSuccessRecord();
 
+    Double getSumNeed();
 
+    Double getSumProvide();
+
+    Double getAvgRateNeed();
+    Double getAvgRateProvide();
 }
