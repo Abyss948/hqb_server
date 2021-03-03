@@ -64,32 +64,67 @@ public class AdminController {
         return new JsonResult<>(map);
     }
 
-    @PostMapping("/flowOpen")
+    @GetMapping("/getNeedAndProvide")
+    public JsonResult<Object> getNeedAndProvide() {
+        Map<String, Object> map = new HashMap<>();
+        Double sumNeed = adminService.getSumNeed();
+        Double sumProvide = adminService.getSumProvide();
+        Double sumNeedOfBank = adminService.getSumNeedOfBank();
+        Double sumProvideOfBank = adminService.getSumProvideOfBank();
+        if (sumNeed == null) {
+            sumNeed = 0.0;
+        }
+        if (sumProvide == null) {
+            sumProvide = 0.0;
+        }
+        if (sumNeedOfBank == null) {
+            sumNeedOfBank = 0.0;
+        }
+        if (sumProvideOfBank == null) {
+            sumProvideOfBank = 0.0;
+        }
+
+        map.put("sumNeed", sumNeed);
+        map.put("sumProvide", sumProvide);
+        map.put("sumNeedOfBank", sumNeedOfBank);
+        map.put("sumProvideOfBank", sumProvideOfBank);
+        if (sumNeed * sumProvide == 0) {
+            map.put("proportion", 0);
+        }
+        if (sumNeed > sumProvide) {
+            map.put("proportion", adminService.fliter(sumNeed / sumProvide, 3));
+        } else {
+            map.put("proportion", adminService.fliter(sumProvide / sumNeed, 3));
+        }
+        return new JsonResult<>(map);
+    }
+
+    @GetMapping("/flowOpen")
     public JsonResult<Object> flowOpen() {
         Map<String, Object> map = new HashMap<>();
         Double sumNeed = adminService.getSumNeed();
         Double sumProvide = adminService.getSumProvide();
-        if(sumNeed==null){
-            sumNeed=0.0;
+        if (sumNeed == null) {
+            sumNeed = 0.0;
         }
-        if(sumProvide==null){
-            sumProvide=0.0;
+        if (sumProvide == null) {
+            sumProvide = 0.0;
         }
-
 /*        map.put("sumNeed",sumNeed);
         map.put("sumProvide",sumProvide);
         return new JsonResult<>(map);*/
-        if(sumNeed*sumProvide==0){
-            return new JsonResult<>("2","供求关系未成立！");
+        if (sumNeed * sumProvide == 0) {
+            return new JsonResult<>("2", "供求关系未成立！");
         }
-        if(!adminService.isOutRate(sumNeed,sumProvide,1.05)){
-            return new JsonResult<>("1","供需关系差异在5%以内！");
+        if (!adminService.isOutRate(sumNeed, sumProvide, 1.05)) {
+            return new JsonResult<>("1", "供需关系差异在5%以内！");
         }
-        if(sumNeed>sumProvide){
-            adminService.needGTprovide(sumNeed,sumProvide);
-        }else{
-            adminService.provideGTneed(sumNeed,sumProvide);
+
+        if (sumNeed > sumProvide) {
+            adminService.needGTprovide(sumNeed, sumProvide);
+        } else {
+            adminService.provideGTneed(sumNeed, sumProvide);
         }
-        return new JsonResult<>("0","流动性接口已打开，供需差异已消除！");
+        return new JsonResult<>("0", "流动性接口已打开，供需差异已消除！");
     }
 }

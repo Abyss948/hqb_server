@@ -26,4 +26,7 @@ public interface AdminMapper {
 
     Double getAvgRateNeed();
     Double getAvgRateProvide();
+
+    Double getSumNeedOfBank();
+    Double getSumProvideOfBank();
 }

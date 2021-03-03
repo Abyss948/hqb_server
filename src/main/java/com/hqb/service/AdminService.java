@@ -23,4 +23,9 @@ public interface AdminService {
 
     void needGTprovide(Double sumNeed, Double sumProvide);
     void provideGTneed(Double sumNeed, Double sumProvide);
+
+    Double fliter(Double v,int t);
+
+    Double getSumNeedOfBank();
+    Double getSumProvideOfBank();
 }

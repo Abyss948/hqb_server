@@ -1,52 +1,124 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>花旗银行后台管理系统&nbsp;流动性接口</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="axios.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>花旗银行后台管理系统&nbsp;流动性接口</title>
 
-<link href="CSS/HuaQicss.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-#API {
-	position:absolute;
-	width:50%;
-	height:80%;
-	z-index:2;
-	top:25%;
-	left:25%;
-}
-#接口 {
-	border-radius:24px;
-	background-color: #1E72B6;
-}
-input{ height:60px; width:90px; border-radius:3px;}
-</style>
+    <link href="CSS/HuaQicss.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        #API {
+            position: absolute;
+            width: 50%;
+            height: 80%;
+            z-index: 2;
+            top: 25%;
+            left: 25%;
+        }
+
+        #接口 {
+            border-radius: 24px;
+            background-color: #1E72B6;
+        }
+
+        input {
+            height: 60px;
+            width: 90px;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 
 <body>
 <header><p id="title">&nbsp;&nbsp;&nbsp;花旗银行后台管理系统</p></header>
-<div id="lNavTop">
-    <div id="lNavCon">
-      <ul>
-        <li><a href="index-0.html" target="_self">实时监管</a></li>
-        <li><a href="index-1.html" target="_self">交易记录</a></li>
-        <li><a href="index-2.html" target="_self">调整利率</a></li>
-        <li><a href="index-3.html" target="_self">流动性接口</a></li>
-        <li><a href="index-4.html" target="_self">手续费统计</a></li>
-      </ul>
+<div id="app">
+    <div id="lNavTop">
+        <div id="lNavCon">
+            <ul>
+                <li><a href="index-0.html" target="_self">实时监管</a></li>
+                <li><a href="index-1.html" target="_self">交易记录</a></li>
+                <li><a href="index-2.html" target="_self">调整利率</a></li>
+                <li><a href="index-3.html" target="_self">流动性接口</a></li>
+                <li><a href="index-4.html" target="_self">手续费统计</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
-  <div id="API">
-    <form id="接口">
-      <br><br>
-      <h1 align="center">流动性接口状态</h1><br>
-      <h2 align="center" id="at1">&nbsp;</h2><br>
-      <p align="center" style="size:70px;">
-        <input type="button"  name="at2" value="打开" onClick="at1.innerHTML=at2.value">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="button" name="at3" value="关闭" onClick="at1.innerHTML=at3.value">
-      </p>
-      <br><br><br>
-    </form>
-  </div>
+
+    <div id="API">
+        <div>
+            <h4>当前贷出额：{{sumProvide}}元 &emsp;&emsp;
+                银行份额：{{sumProvideOfBank}}元
+                <br>
+                当前借进额：{{sumNeed}}元 &emsp;&emsp;
+                银行份额：{{sumNeedOfBank}}元
+                &emsp;&emsp;&emsp;比例：{{proportion}}</h4>
+        </div>
+        <br>
+        <form id="接口">
+            <br><br>
+            <h1 align="center">流动性接口状态</h1><br>
+            <h2 align="center" id="at1">&nbsp;</h2><br>
+            <p align="center" style="size:70px;">
+                <input type="button" name="at2" value="打开" @click="flowopen">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" name="at3" value="关闭">
+            </p>
+            <br><br><br>
+        </form>
+    </div>
+</div>
 </body>
 </html>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {//数据
+            proportion: 0,
+            sumProvide: 0,
+            sumNeed: 0,
+            sumNeedOfBank: 0,
+            sumProvideOfBank: 0
+        },
+        methods: {
+            flowopen() {
+                var _this = this;
+                axios.get("http://localhost:8090/flowOpen").then(res => {
+                    if (res.data.code === '0') {
+                        alert(res.data.msg);
+                        axios.get("http://localhost:8090/getNeedAndProvide").then(res => {
+                            _this.proportion = res.data.data.proportion;
+                            _this.sumNeed = res.data.data.sumNeed;
+                            _this.sumProvide = res.data.data.sumProvide;
+                            _this.sumNeedOfBank = res.data.data.sumNeedOfBank;
+                            _this.sumProvideOfBank = res.data.data.sumProvideOfBank;
+                        });
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            }
+        },
+        created() {//生命周期函数
+            var userString = localStorage.getItem("admin");
+            if (userString) {
+                this.admin = JSON.parse(userString);
+            } else {
+                alert("您尚未登录，点击确定跳转至登录页面！");
+                location.href = "./login.html";
+            }
+            //查询当前need and provide
+            var _this = this;
+            axios.get("http://localhost:8090/getNeedAndProvide").then(res => {
+                _this.proportion = res.data.data.proportion;
+                _this.sumNeed = res.data.data.sumNeed;
+                _this.sumProvide = res.data.data.sumProvide;
+                _this.sumNeedOfBank = res.data.data.sumNeedOfBank;
+                _this.sumProvideOfBank = res.data.data.sumProvideOfBank;
+            });
+        },
+        mounted() {
+
+        },
+    });
+</script>

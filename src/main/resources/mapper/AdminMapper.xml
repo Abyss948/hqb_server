@@ -43,6 +43,18 @@
          WHERE DATEDIFF(starttime,NOW())=0 and status=0
     </select>
 
+    <select id="getSumNeedOfBank" resultType="Double">
+         SELECT goalmoney-nowmoney FROM need
+         WHERE DATEDIFF(starttime,NOW())=0 and status=0 and userid=1
+    </select>
+
+    <select id="getSumProvideOfBank" resultType="Double">
+         SELECT goalmoney-nowmoney FROM provide
+         WHERE DATEDIFF(starttime,NOW())=0 and status=0 and userid=1
+    </select>
+
+
+
     <select id="getAvgRateNeed" resultType="Double">
         select avg(rate) from need where DATEDIFF(starttime,NOW())=0 and status=0
     </select>
