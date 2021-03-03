@@ -83,10 +83,10 @@
         methods: {
             flowopen() {
                 var _this = this;
-                axios.get("http://localhost:8090/flowOpen").then(res => {
+                axios.get("http://81.70.199.191:8090/flowOpen").then(res => {
                     if (res.data.code === '0') {
                         alert(res.data.msg);
-                        axios.get("http://localhost:8090/getNeedAndProvide").then(res => {
+                        axios.get("http://81.70.199.191:8090/getNeedAndProvide").then(res => {
                             _this.proportion = res.data.data.proportion;
                             _this.sumNeed = res.data.data.sumNeed;
                             _this.sumProvide = res.data.data.sumProvide;
@@ -109,7 +109,7 @@
             }
             //查询当前need and provide
             var _this = this;
-            axios.get("http://localhost:8090/getNeedAndProvide").then(res => {
+            axios.get("http://81.70.199.191:8090/getNeedAndProvide").then(res => {
                 _this.proportion = res.data.data.proportion;
                 _this.sumNeed = res.data.data.sumNeed;
                 _this.sumProvide = res.data.data.sumProvide;

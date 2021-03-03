@@ -79,7 +79,7 @@
                 formData.append("longmax", _this.longmax);
                 axios({
                     method: "post",
-                    url: "http://localhost:8090/setWebRate",
+                    url: "http://81.70.199.191:8090/setWebRate",
                     data: formData,
                     headers: {
                         'content-type': 'multipart/form-data'
@@ -94,7 +94,7 @@
             },
             getRate() {
                 var _this = this;
-                axios.get("http://localhost:8090/getRateMinMax").then(res => {
+                axios.get("http://81.70.199.191:8090/getRateMinMax").then(res => {
                     _this.shortmin = res.data.data.shortmin;
                     _this.shortmax = res.data.data.shortmax;
                     _this.longmin = res.data.data.longmin;
@@ -175,7 +175,7 @@
                 backgroundColor: '#ffffff'
             };
 
-            axios.get("http://localhost:8090/getWebSerFeeChart").then(res => {
+            axios.get("http://81.70.199.191:8090/getWebSerFeeChart").then(res => {
                 console.log(res.data.data)
                 this.chartLine1.setOption({ //加载数据图表
                     series: [
