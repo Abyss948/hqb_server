@@ -33,7 +33,7 @@ public class MyController {
     public JsonResult<Map<String, Object>> transferAction(@RequestParam("myid") String myid,
                                                           @RequestParam("code") String code,
                                                           @RequestParam("transferMoney") String transferMoney) {
-        String codeOfLast = code.substring(20);
+        String codeOfLast = code.substring(40);
         int loseid = Integer.parseInt(myid);
         int getid = Integer.parseInt(codeOfLast);
         if (loseid <= 0 || getid <= 0) {

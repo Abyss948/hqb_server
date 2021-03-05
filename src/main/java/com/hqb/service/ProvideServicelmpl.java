@@ -1,12 +1,15 @@
 package com.hqb.service;
 
+import com.hqb.mapper.MyMapper;
 import com.hqb.mapper.NeedMapper;
 import com.hqb.mapper.ProvideMapper;
 import com.hqb.pojo.Need;
 import com.hqb.pojo.Provide;
+import com.hqb.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,9 @@ public class ProvideServicelmpl implements ProvideService {
 
     @Autowired
     NeedService needservice;
+
+    @Autowired
+    MyMapper myMapper;
 
     @Override
     public void setNewProvide(int userid, double rate, double timelimit, double goalmoney) {
@@ -72,11 +78,19 @@ public class ProvideServicelmpl implements ProvideService {
         map.put("timelimit",timelimit);
         map.put("rate",rate);
         List<Map<String, Object>> list1 = provideMapper.getTimeRateMatchList(map);
-        List<Map<String, Object>> list2 = provideMapper.getTimeMatchList(map);
-        List<Map<String, Object>> list3 = provideMapper.getRateMatchList(map);
-        list1.addAll(list2);
-        list1.addAll(list3);
+        if(list1.size()<5) {
+            List<Map<String, Object>> list2 = provideMapper.getTimeMatchList(map);
+            list1.addAll(list2);
+        }
+        if(list1.size()<5) {
+            List<Map<String, Object>> list3 = provideMapper.getRateMatchList(map);
+            list1.addAll(list3);
+        }
+        if(list1.size()<5)
         return list1;
+        else{
+            return list1.subList(0,21);
+        }
     }
 
     @Override
@@ -87,11 +101,19 @@ public class ProvideServicelmpl implements ProvideService {
         map.put("timelimit",provide.getTimelimit());
         map.put("rate",provide.getRate());
         List<Map<String, Object>> list1 = provideMapper.getTimeRateMatchList(map);
-        List<Map<String, Object>> list2 = provideMapper.getTimeMatchList(map);
-        List<Map<String, Object>> list3 = provideMapper.getRateMatchList(map);
-        list1.addAll(list2);
-        list1.addAll(list3);
-        return list1;
+        if(list1.size()<20) {
+            List<Map<String, Object>> list2 = provideMapper.getTimeMatchList(map);
+            list1.addAll(list2);
+        }
+        if(list1.size()<20) {
+            List<Map<String, Object>> list3 = provideMapper.getRateMatchList(map);
+            list1.addAll(list3);
+        }
+        if(list1.size()<20)
+            return list1;
+        else{
+            return list1.subList(0,21);
+        }
     }
 
     @Override
@@ -155,5 +177,21 @@ public class ProvideServicelmpl implements ProvideService {
         if(successMoney+provide.getNowmoney()==provide.getGoalmoney()){
             provideMapper.updateProvide(provide.getProvideid());
         }
+
+        User loseUser = myMapper.getUserByUerid(provide.getUserid());
+        User getUser = myMapper.getUserByUerid(need.getUserid());
+        BigDecimal b1 = new BigDecimal(loseUser.getBalance() - successMoney);
+        double losemoney = b1.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal b2 = new BigDecimal(getUser.getBalance() + successMoney);
+        double getmoney = b2.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        setBalance(provide.getUserid(), losemoney);
+        setBalance(need.getUserid(), getmoney);
+    }
+
+    public void setBalance(int userid, double money) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("balance", money);
+        myMapper.setBalance(map);
     }
 }

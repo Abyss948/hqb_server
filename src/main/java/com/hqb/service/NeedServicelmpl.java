@@ -1,13 +1,16 @@
 package com.hqb.service;
 
 import com.hqb.mapper.AdminMapper;
+import com.hqb.mapper.MyMapper;
 import com.hqb.mapper.NeedMapper;
 import com.hqb.mapper.ProvideMapper;
 import com.hqb.pojo.Need;
 import com.hqb.pojo.Provide;
+import com.hqb.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +30,9 @@ public class NeedServicelmpl implements NeedService {
     @Autowired
     ProvideService provideService;
 
+    @Autowired
+    MyMapper myMapper;
+
     @Override
     public void setNewNeed(int userid, double rate, double timelimit, double goalmoney) {
         Map<String, Object> map = new HashMap<>();
@@ -35,7 +41,7 @@ public class NeedServicelmpl implements NeedService {
         map.put("timelimit", timelimit);
         map.put("goalmoney", goalmoney);
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        map.put("starttime",currentTime);
+        map.put("starttime", currentTime);
         needMapper.updateOldNeed(userid);
         needMapper.setNewNeed(map);
 
@@ -48,7 +54,7 @@ public class NeedServicelmpl implements NeedService {
         if (timelimit <= 1) {
             rateMin = adminMapper.getMinRateOne();
             rateMax = adminMapper.getMaxRateOne();
-        }else{
+        } else {
             rateMin = adminMapper.getMinRateTwo();
             rateMax = adminMapper.getMaxRateTwo();
         }
@@ -82,51 +88,67 @@ public class NeedServicelmpl implements NeedService {
         } else if (timelimit <= 3) {
             timeRate = 3;
         }
-        return (Math.round(goalmoney * serviceRate * timeRate*100)/100.0);
+        return (Math.round(goalmoney * serviceRate * timeRate * 100) / 100.0);
     }
 
     @Override
     public List<Map<String, Object>> getMatchList(int userid, double rate, double timelimit, double goalmoney) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("userid",userid);
-        map.put("timelimit",timelimit);
-        map.put("rate",rate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("timelimit", timelimit);
+        map.put("rate", rate);
         List<Map<String, Object>> list1 = needMapper.getTimeRateMatchList(map);
-        List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);
-        List<Map<String, Object>> list3 = needMapper.getRateMatchList(map);
-        list1.addAll(list2);
-        list1.addAll(list3);
-        return list1;
+        if (list1.size() < 20) {
+            List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);
+            list1.addAll(list2);
+        }
+        if (list1.size() < 20) {
+            List<Map<String, Object>> list3 = needMapper.getRateMatchList(map);
+            list1.addAll(list3);
+        }
+        if (list1.size() < 20)
+            return list1;
+        else {
+            return list1.subList(0, 21);
+        }
     }
 
     @Override
     public List<Map<String, Object>> getNeedMatchList(int userid) {
         Need need = needMapper.getNeedByUserid(userid);
-        Map<String,Object> map = new HashMap<>();
-        map.put("userid",userid);
-        map.put("timelimit",need.getTimelimit());
-        map.put("rate",need.getRate());
+        Map<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("timelimit", need.getTimelimit());
+        map.put("rate", need.getRate());
         List<Map<String, Object>> list1 = needMapper.getTimeRateMatchList(map);
-        List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);
-        List<Map<String, Object>> list3 = needMapper.getRateMatchList(map);
-        list1.addAll(list2);
-        list1.addAll(list3);
-        return list1;
+        if (list1.size() < 20) {
+            List<Map<String, Object>> list2 = needMapper.getTimeMatchList(map);
+            list1.addAll(list2);
+        }
+        if (list1.size() < 20) {
+            List<Map<String, Object>> list3 = needMapper.getRateMatchList(map);
+            list1.addAll(list3);
+        }
+        if (list1.size() < 20)
+            return list1;
+        else {
+            return list1.subList(0, 21);
+        }
     }
 
     @Override
     public Map<String, Object> needSimulate(int userid, int provideid) {
         double needMoney = needMapper.getMoneyByUserid(userid);
         Provide provide = provideMapper.getProvideByProvideid(provideid);
-        double successMoney = Math.min(needMoney,provide.getGoalmoney()-provide.getNowmoney());
+        double successMoney = Math.min(needMoney, provide.getGoalmoney() - provide.getNowmoney());
         double rate = provide.getRate();
         double timelimit = provide.getTimelimit();
         double servicefee = getServicefee(successMoney, timelimit);
-        Map<String,Object> map = new HashMap<>();
-        map.put("successMoney",successMoney);
-        map.put("rate",rate);
-        map.put("timelimit",timelimit);
-        map.put("servicefee",servicefee);
+        Map<String, Object> map = new HashMap<>();
+        map.put("successMoney", successMoney);
+        map.put("rate", rate);
+        map.put("timelimit", timelimit);
+        map.put("servicefee", servicefee);
         return map;
     }
 
@@ -136,44 +158,61 @@ public class NeedServicelmpl implements NeedService {
         Need need = needMapper.getNeedByUserid(userid);
         Provide provide = provideMapper.getProvideByProvideid(provideid);
 
-        double successMoney = Math.min(need.getGoalmoney()-need.getNowmoney(),provide.getGoalmoney()-provide.getNowmoney());
+        double successMoney = Math.min(need.getGoalmoney() - need.getNowmoney(), provide.getGoalmoney() - provide.getNowmoney());
         double timelimit = provide.getTimelimit();
         double rate = provide.getRate();
         double nservicefee = getServicefee(successMoney, timelimit);
-        double pservicefee = provideService.getServicefee(successMoney,timelimit);
+        double pservicefee = provideService.getServicefee(successMoney, timelimit);
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("needid",need.getNeedid());
-        map.put("provideid",provide.getProvideid());
-        map.put("nid",need.getUserid());
-        map.put("pid",provide.getUserid());
-        map.put("rate",rate);
-        map.put("timelimit",timelimit);
+        Map<String, Object> map = new HashMap<>();
+        map.put("needid", need.getNeedid());
+        map.put("provideid", provide.getProvideid());
+        map.put("nid", need.getUserid());
+        map.put("pid", provide.getUserid());
+        map.put("rate", rate);
+        map.put("timelimit", timelimit);
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        long nextTimeLong = currentTime.getTime()+(long)1000*360*24*365*(long)(timelimit*10);
+        long nextTimeLong = currentTime.getTime() + (long) 1000 * 360 * 24 * 365 * (long) (timelimit * 10);
         Timestamp nextTime = new Timestamp(nextTimeLong);
-        map.put("starttime",currentTime);
-        map.put("endtime",nextTime);
-        map.put("money",successMoney);
-        map.put("nservicefee",nservicefee);
-        map.put("pservicefee",pservicefee);
+        map.put("starttime", currentTime);
+        map.put("endtime", nextTime);
+        map.put("money", successMoney);
+        map.put("nservicefee", nservicefee);
+        map.put("pservicefee", pservicefee);
         needMapper.addSuccess(map);
 
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("nowmoney",successMoney+need.getNowmoney());//新的已借到金额 = 成交金额+已借到金额
-        map1.put("needid",need.getNeedid());
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("nowmoney", successMoney + need.getNowmoney());//新的已借到金额 = 成交金额+已借到金额
+        map1.put("needid", need.getNeedid());
 
-        Map<String,Object> map2 = new HashMap<>();
-        map2.put("nowmoney",successMoney+provide.getNowmoney());//新的已借出金额 = 成交金额+已借出金额
-        map2.put("provideid",provide.getProvideid());
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("nowmoney", successMoney + provide.getNowmoney());//新的已借出金额 = 成交金额+已借出金额
+        map2.put("provideid", provide.getProvideid());
 
         needMapper.updateNowMoney(map1);//更新已借到金额
         provideMapper.updateNowMoney(map2);//更新已借出金额
-        if(successMoney+need.getNowmoney()==need.getGoalmoney()){
+        if (successMoney + need.getNowmoney() == need.getGoalmoney()) {
             needMapper.updateNeed(need.getNeedid());
         }
-        if(successMoney+provide.getNowmoney()==provide.getGoalmoney()){
+        if (successMoney + provide.getNowmoney() == provide.getGoalmoney()) {
             provideMapper.updateProvide(provide.getProvideid());
         }
+
+        User loseUser = myMapper.getUserByUerid(provide.getUserid());
+        User getUser = myMapper.getUserByUerid(need.getUserid());
+        BigDecimal b1 = new BigDecimal(loseUser.getBalance() - successMoney);
+        double losemoney = b1.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal b2 = new BigDecimal(getUser.getBalance() + successMoney);
+        double getmoney = b2.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        setBalance(provide.getUserid(), losemoney);
+        setBalance(need.getUserid(), getmoney);
+
+    }
+
+    public void setBalance(int userid, double money) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("balance", money);
+        myMapper.setBalance(map);
     }
 }

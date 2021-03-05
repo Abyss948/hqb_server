@@ -54,4 +54,13 @@
     <update id="updateNeed" parameterType="int">
         update need set status=1 where needid=#{needid}
     </update>
+
+    <insert id="zsetNewNeed" parameterType="map" useGeneratedKeys="true" keyColumn="needid">
+        insert into need(userid,rate,timelimit,goalmoney,nowmoney,starttime,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,#{starttime},0)
+    </insert>
+
+    <insert id="zsetNewProvide" parameterType="map" useGeneratedKeys="true" keyColumn="needid">
+        insert into provide(userid,rate,timelimit,goalmoney,nowmoney,starttime,status) values(#{userid},#{rate},#{timelimit},#{goalmoney},0,#{starttime},0)
+    </insert>
+
 </mapper>

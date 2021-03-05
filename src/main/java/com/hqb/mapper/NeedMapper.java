@@ -27,4 +27,7 @@ public interface NeedMapper {
     void updateNowMoney(Map<String, Object> map);
 
     void updateNeed(int needid);
+
+    void zsetNewNeed(Map<String, Object> map);
+    void zsetNewProvide(Map<String, Object> map);
 }
